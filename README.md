@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧠 Sublime IQ - AI-Powered Microcourse Generator
 
-## Getting Started
+> **"Learning has never been this personalized. Enter any topic, get a complete microcourse in seconds."**
 
-First, run the development server:
+Transform your curiosity into structured knowledge with Sublime IQ - the revolutionary AI microcourse generator that creates personalized learning experiences tailored to any topic you want to master.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ What is Sublime IQ?
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Sublime IQ is an intelligent learning platform that harnesses the power of AI to generate comprehensive microcourses on virtually any subject. Whether you're diving into quantum physics, learning about sourdough baking, or exploring machine learning algorithms, Sublime IQ creates a structured 5-6 part learning journey complete with:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 📚 **Detailed lesson content** in markdown format
+- 🎥 **Curated YouTube video recommendations** for each lesson
+- 📝 **Clear lesson summaries** and learning objectives
+- 🎯 **Progressive learning structure** that builds knowledge step-by-step
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### How It Works
 
-## Learn More
+1. **Enter Your Topic**: Simply type in what you want to learn
+2. **AI Generation**: Our OpenAI-powered engine creates a structured curriculum
+3. **Enhanced Learning**: Each lesson includes both written content and relevant YouTube videos
+4. **Interactive Experience**: Navigate through lessons with an intuitive sidebar interface
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Instant Course Generation**: Get a complete microcourse in seconds
+- **AI-Curated Content**: Leverages GPT-4 for high-quality, educational content
+- **Video Integration**: Automatically finds relevant YouTube videos using YouTube Data API
+- **Responsive Design**: Beautiful, modern UI built with Next.js and Tailwind CSS
+- **Progressive Learning**: Structured lessons that build upon each other
+- **Academic Focus**: Prioritizes quality educational content over entertainment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠️ Tech Stack
 
-## Deploy on Vercel
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Styling**: Tailwind CSS
+- **AI Integration**: OpenAI GPT-4
+- **Video Content**: YouTube Data API v3
+- **Package Manager**: pnpm
+- **Development**: Turbopack for fast development
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ⚡ Quick Setup
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Prerequisites
+
+- Node.js (v18 or higher)
+- pnpm package manager
+- OpenAI API Key
+- YouTube Data API Key
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/yourusername/sublime-iq.git
+   cd sublime-iq
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   pnpm install
+   ```
+
+3. **Environment Configuration**
+
+   Create a `.env.local` file in the root directory:
+
+   ```env
+   OPENAI_API_KEY=your_openai_api_key_here
+   YOUTUBE_API_KEY=your_youtube_data_api_key_here
+   ```
+
+   **Getting API Keys:**
+
+   - **OpenAI API Key**: Visit [OpenAI Platform](https://platform.openai.com/api-keys) to create your API key
+   - **YouTube Data API Key**: Go to [Google Cloud Console](https://console.cloud.google.com/), enable YouTube Data API v3, and create credentials
+
+4. **Run the development server**
+
+   ```bash
+   pnpm dev
+   ```
+
+5. **Open your browser**
+   Navigate to `http://localhost:3000` and start generating microcourses!
+
+## 🎯 Usage
+
+1. Enter any topic you want to learn about in the input field
+2. Click "Generate Microcourse"
+3. Wait for the AI to create your personalized curriculum
+4. Navigate through lessons using the sidebar
+5. Watch recommended videos and read detailed content for each lesson
+
+## 🤝 Contributing
+
+We welcome contributions! Please feel free to submit issues, feature requests, or pull requests.
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+**Built with ❤️ for learners everywhere. Start your learning journey today with Sublime IQ!**
