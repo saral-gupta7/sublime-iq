@@ -1,6 +1,6 @@
 import React from "react";
 import HomePage from "@/sections/HomePage";
-import CourseBar from "@/components/CourseBar";
+// import CourseBar from "@/components/CourseBar";
 
 const Home = () => {
   return (

@@ -19,9 +19,9 @@ export async function POST(req: NextRequest) {
   3. "youtube_query": A high-quality YouTube search query string that would return helpful results
   4. "article_content": Markdown content with:
      - ## Headings
-     - At least 2 paragraphs
+     - At least 2 detailed paragraphs
      - Real-world explanations
-     - End with: "Read more: [actual article URL]"
+  5. Do not include youtube shorts and prefer strong academic content and avoid channels like Apna College.
   
   Respond only with a JSON array like:
   [
@@ -29,21 +29,29 @@ export async function POST(req: NextRequest) {
       "title": "Lesson Title",
       "summary": "This lesson explains...",
       "youtube_query": "How layout grids work in UI design",
-      "article_content": "## Grids Matter\\n\\nContent here...\\n\\nRead more: https://..."
+      "article_content": "## Grids Matter\\n\\nContent here...\\n\\n"
     },
     ...
   ]
   `;
   const chat = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: "gpt-4",
     messages: [{ role: "user", content: prompt }],
   });
 
-  let response = chat.choices[0].message.content;
+  const response = chat.choices[0].message.content;
+  type Lesson = {
+    title: string;
+    summary: string;
+    youtube_query: string;
+    article_content: string;
+    youtube_url?: string;
+  };
+
   try {
-    const parsed = JSON.parse(response!);
-    const enrichedLessons = await Promise.all(
-      parsed.map(async (lesson: any) => {
+    const parsed: Lesson[] = JSON.parse(response!);
+    const enrichedLessons: Lesson[] = await Promise.all(
+      parsed.map(async (lesson: Lesson) => {
         const url = await fetchYoutubeVideo(lesson.youtube_query);
         return {
           ...lesson,
@@ -53,6 +61,7 @@ export async function POST(req: NextRequest) {
     );
     return NextResponse.json({ lessons: enrichedLessons });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({
       error: "Could not parse JSON from OpenAI",
       raw: response,

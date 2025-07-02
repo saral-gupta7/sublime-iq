@@ -14,7 +14,7 @@ type CourseBarProps = {
 
 const CourseBar = ({ lessons, selectedKey, onSelect }: CourseBarProps) => {
   return (
-    <div className="fixed text-white min-h-screen w-84 bg-[#161819] flex flex-col overflow-y-auto gap-8">
+    <div className="sticky text-white min-h-screen w-84 bg-[#161819] flex flex-col overflow-y-auto gap-8">
       <div className="h-40 w-full flex items-center justify-center border-b border-white/10">
         <h1 className="text-2xl uppercase font-bold">Sublime IQ</h1>
       </div>
