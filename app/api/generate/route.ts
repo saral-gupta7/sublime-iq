@@ -53,7 +53,6 @@ export async function POST(req: NextRequest) {
       ],
     });
 
-    const response = result.response;
     const responseText = await result.response.text();
 
     let cleanedResponse = responseText.trim();
