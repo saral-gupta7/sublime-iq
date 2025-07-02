@@ -1,10 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
-import OpenAI from "openai";
-
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { fetchYoutubeVideo } from "@/lib/youtube";
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
 
 export async function POST(req: NextRequest) {
   const { topic } = await req.json();
@@ -21,7 +19,7 @@ export async function POST(req: NextRequest) {
      - ## Headings
      - At least 2 detailed paragraphs
      - Real-world explanations
-  5. Do not include youtube shorts and prefer strong academic content and avoid channels like Apna College.
+  5. Do not include YouTube Shorts and prefer strong academic content. Avoid channels like Apna College.
   
   Respond only with a JSON array like:
   [
@@ -34,12 +32,9 @@ export async function POST(req: NextRequest) {
     ...
   ]
   `;
-  const chat = await openai.chat.completions.create({
-    model: "gpt-4",
-    messages: [{ role: "user", content: prompt }],
-  });
 
-  const response = chat.choices[0].message.content;
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+
   type Lesson = {
     title: string;
     summary: string;
@@ -49,22 +44,46 @@ export async function POST(req: NextRequest) {
   };
 
   try {
-    const parsed: Lesson[] = JSON.parse(response!);
+    const result = await model.generateContent({
+      contents: [
+        {
+          role: "user",
+          parts: [{ text: prompt }],
+        },
+      ],
+    });
+
+    const response = result.response;
+    const responseText = await result.response.text();
+
+    let cleanedResponse = responseText.trim();
+
+    // Remove markdown blocks
+    if (cleanedResponse.startsWith("```json")) {
+      cleanedResponse = cleanedResponse
+        .replace(/```json\n?/, "")
+        .replace(/\n?```$/, "");
+    } else if (cleanedResponse.startsWith("```")) {
+      cleanedResponse = cleanedResponse
+        .replace(/```\n?/, "")
+        .replace(/\n?```$/, "");
+    }
+
+    const parsed: Lesson[] = JSON.parse(cleanedResponse);
+
     const enrichedLessons: Lesson[] = await Promise.all(
       parsed.map(async (lesson: Lesson) => {
         const url = await fetchYoutubeVideo(lesson.youtube_query);
-        return {
-          ...lesson,
-          youtube_url: url,
-        };
+        return { ...lesson, youtube_url: url };
       })
     );
+
     return NextResponse.json({ lessons: enrichedLessons });
   } catch (error) {
-    console.log(error);
+    console.error("Error:", error);
     return NextResponse.json({
-      error: "Could not parse JSON from OpenAI",
-      raw: response,
+      error: "Could not generate or parse content from Gemini",
+      details: error instanceof Error ? error.message : "Unknown error",
     });
   }
 }

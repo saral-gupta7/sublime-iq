@@ -4,8 +4,9 @@ import { useState } from "react";
 import axios from "axios";
 import { marked } from "marked";
 import CourseBar from "@/components/CourseBar";
+import Hero from "@/components/Hero";
+import { motion } from "motion/react";
 import { Plus, Ellipsis } from "lucide-react";
-
 type Lesson = {
   title: string;
   summary: string;
@@ -50,55 +51,50 @@ const HomePage = () => {
     selectedIndex < lessons.length;
 
   return (
-    <div className="flex min-h-screen">
+    <div className="relative flex min-h-screen w-full">
+      {/* Azure Depths */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          background:
+            "radial-gradient(125% 125% at 50% 100%, #000000 40%, #350136 100%)",
+        }}
+      />
+
       {/* Sidebar */}
-      {sidebarVisible ? (
-        <CourseBar
-          lessons={lessons}
-          selectedKey={selectedLessonKey}
-          onSelect={setSelectedLessonKey}
-        />
-      ) : (
-        ""
-      )}
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+      >
+        {sidebarVisible && (
+          <CourseBar
+            lessons={lessons}
+            selectedKey={selectedLessonKey}
+            onSelect={setSelectedLessonKey}
+          />
+        )}
+      </motion.div>
 
       {/* Main Content */}
       <section
-        className={`flex-1 bg-[#111] text-[#eee] p-10 overflow-y-auto flex flex-col gap-10 ${
+        className={`flex-1 text-[#eee] p-10 overflow-y-auto flex flex-col gap-10 z-1 ${
           sidebarVisible ? "items-start" : "items-center"
         } justify-center`}
       >
         {/* Input */}
 
-        <div className="max-w-4xl mx-auto flex items-end gap-8">
-          <div className="flex flex-col gap-10">
-            <h1 className="text-7xl font-bold">Welcome to Sublime-IQ</h1>
+        <Hero
+          handleGenerate={handleGenerate}
+          topic={topic}
+          setTopic={setTopic}
+          loading={loading}
+        />
 
-            <div className="flex gap-4">
-              <input
-                type="text"
-                className="border-2 border-white rounded-full px-5 py-3 text-white bg-transparent w-full"
-                placeholder="What would you like to learn today?"
-                onChange={(e) => setTopic(e.target.value)}
-                value={topic}
-              />
-
-              <button
-                onClick={handleGenerate}
-                className="h-12 w-12 text-3xl bg-[#eee] text-black rounded-full hover:bg-black hover:text-white transition-all duration-300 flex items-center justify-center"
-              >
-                {loading ? <Ellipsis size={24} /> : <Plus size={24} />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {loading ? (
+        {/* Loader State */}
+        {loading && (
           <span className="text-white">
             Creating your course...Please Wait!
           </span>
-        ) : (
-          ""
         )}
 
         {/* Lesson Viewer */}
