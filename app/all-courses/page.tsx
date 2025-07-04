@@ -41,13 +41,13 @@ const AllCourses = () => {
       {loading ? (
         <p className="text-center">Loading...</p>
       ) : courses.length === 0 ? (
-        <p className="text-center text-gray-300">No courses found.</p>
+        <p className="text-center text-gray-400">No courses found.</p>
       ) : (
         <div className="space-y-10">
           {courses.map((course) => (
             <div
               key={course.id}
-              className="bg-[#161819] rounded-xl p-10 shadow-lg"
+              className="bg-[#161819] rounded-xl p-6 shadow-lg"
             >
               <h2 className="text-2xl font-semibold mb-2">📘 {course.topic}</h2>
               <p className="text-sm text-gray-400 mb-4">
