@@ -47,7 +47,7 @@ const AllCourses = () => {
           {courses.map((course) => (
             <div
               key={course.id}
-              className="bg-[#161819] rounded-xl p-6 shadow-lg"
+              className="bg-[#161819] rounded-xl p-10 shadow-lg"
             >
               <h2 className="text-2xl font-semibold mb-2">📘 {course.topic}</h2>
               <p className="text-sm text-gray-400 mb-4">
