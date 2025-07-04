@@ -41,7 +41,7 @@ const AllCourses = () => {
       {loading ? (
         <p className="text-center">Loading...</p>
       ) : courses.length === 0 ? (
-        <p className="text-center text-gray-400">No courses found.</p>
+        <p className="text-center text-gray-300">No courses found.</p>
       ) : (
         <div className="space-y-10">
           {courses.map((course) => (
