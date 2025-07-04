@@ -26,71 +26,27 @@ const HomePage = () => {
       setLoading(true);
       setLessons([]);
       setSidebarVisible(false);
+      // We generate course using Gemini
+      const res = await axios.post("/api/generate", { topic });
 
-      if (!topic.trim()) {
-        alert("Please enter a topic before generating a course.");
-        setSidebarVisible(false);
-        setLoading(false);
-        return;
-      }
+      const receivedLessons = Array.isArray(res.data.lessons)
+        ? res.data.lessons
+        : [];
 
-      // ✅ Step 1: Generate lessons from Gemini
-      const generateRes = await axios.post("/api/generate", { topic });
-      const generatedLessons = generateRes.data.lessons;
+      setLessons(receivedLessons);
+      setSelectedLessonKey("lesson-0"); // default selection
+      setSidebarVisible(true);
 
-      // ✅ Step 2: Save to DB using those lessons
       await axios.post("/api/createCourse", {
         topic,
-        lessons: generatedLessons,
+        lessons: receivedLessons,
       });
-
-      // ✅ Step 3: Update UI
-      const res = await axios.get("/api/getLatestCourse");
-      const courses = res.data;
-
-      const formattedLessons = courses.lessons.map((lesson: any) => ({
-        title: lesson.title,
-        summary: lesson.summary,
-        youtube_url: lesson.youtubeUrl,
-        article_content: lesson.articleContent,
-      }));
-
-      setLessons(formattedLessons);
-      setSelectedLessonKey("lesson-0");
-      setSidebarVisible(true);
     } catch (error) {
       console.error("❌ Failed to generate course!", error);
       alert("Something went wrong while generating the course. Try again!");
     } finally {
       setLoading(false);
       setSidebarVisible(true);
-    }
-  };
-
-  const handleFetchFromDB = async () => {
-    try {
-      setLoading(true);
-      setLessons([]);
-      setSidebarVisible(false);
-
-      const res = await axios.get("/api/getLatestCourse");
-      const course = res.data;
-
-      const formattedLessons = course.lessons.map((lesson: any) => ({
-        title: lesson.title,
-        summary: lesson.summary,
-        youtube_url: lesson.youtubeUrl,
-        article_content: lesson.articleContent,
-      }));
-
-      setLessons(formattedLessons);
-      setSelectedLessonKey("lesson-0");
-      setSidebarVisible(true);
-    } catch (error) {
-      console.error("❌ Failed to load course from DB", error);
-      alert("Something went wrong while loading course from DB.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -133,23 +89,6 @@ const HomePage = () => {
       >
         {/* Input */}
 
-        <div className="flex gap-4">
-          <button
-            onClick={handleGenerate}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            disabled={loading}
-          >
-            Generate New Course
-          </button>
-
-          <button
-            onClick={handleFetchFromDB}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-            disabled={loading}
-          >
-            View Latest Course
-          </button>
-        </div>
         {!sidebarVisible && (
           <div className={`${sidebarVisible && "pl-64"}`}>
             <Hero

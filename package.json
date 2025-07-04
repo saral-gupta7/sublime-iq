@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@prisma/client": "6.11.0",
     "axios": "^1.10.0",
     "dotenv": "^17.0.0",
     "lucide-react": "^0.525.0",
@@ -30,6 +31,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
+    "prisma": "^6.11.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -20,6 +20,11 @@ const Hero = ({ topic, setTopic, handleGenerate, loading }: HeroProps) => {
             className="border-2 border-white rounded-full px-5 py-3 text-white bg-transparent w-full"
             placeholder="What would you like to learn today?"
             onChange={(e) => setTopic(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleGenerate();
+              }
+            }}
             value={topic}
           />
 

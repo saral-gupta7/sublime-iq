@@ -7,19 +7,27 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
 export async function POST(req: NextRequest) {
   const { topic } = await req.json();
 
+  if (!topic || !topic.trim()) {
+    return NextResponse.json(
+      {
+        error: "Please enter the query",
+      },
+      { status: 400 }
+    );
+  }
   const prompt = `
   Create a 5 to 6 part microcourse on the topic: "${topic}".
   
   Each part must include:
   
   1. "title": A clear lesson title
-  2. "summary": A 1–2 sentence summary
+  2. "summary": A 3-4 sentence summary
   3. "youtube_query": A high-quality YouTube search query string that would return helpful results
   4. "article_content": Markdown content with:
      - ## Headings
-     - At least 2 detailed paragraphs
+     - At least 4 detailed paragraphs separated by space.
      - Real-world explanations
-  5. Do not include YouTube Shorts and prefer strong academic content. Avoid channels like Apna College.
+  5. Strictly do not include YouTube Shorts and prefer strong academic content. Avoid channels like Apna College.
   
   Respond only with a JSON array like:
   [
@@ -33,7 +41,7 @@ export async function POST(req: NextRequest) {
   ]
   `;
 
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   type Lesson = {
     title: string;
