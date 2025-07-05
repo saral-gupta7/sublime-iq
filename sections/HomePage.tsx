@@ -87,7 +87,7 @@ const HomePage = () => {
       setSelectedLessonKey("lesson-0");
       setSidebarVisible(true);
     } catch (error) {
-      console.error("❌ Failed to load course from DB", error);
+      console.error("Failed to load course from DB", error);
       alert("Something went wrong while loading course from DB.");
     } finally {
       setLoading(false);
