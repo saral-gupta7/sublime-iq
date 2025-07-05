@@ -49,9 +49,9 @@ const AllCourses = () => {
               key={course.id}
               className="bg-[#161819] rounded-xl p-6 shadow-lg"
             >
-              <h2 className="text-2xl font-semibold mb-2">📘 {course.topic}</h2>
+              <h2 className="text-2xl font-semibold mb-4">📘 {course.topic}</h2>
               <p className="text-sm text-gray-400 mb-4">
-                Created on: {new Date(course.createdAt).toLocaleDateString()}
+                {new Date(course.createdAt).toLocaleDateString()}
               </p>
 
               {course.lessons.length > 0 ? (
