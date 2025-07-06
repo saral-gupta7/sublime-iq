@@ -20,11 +20,11 @@ type CourseBarProps = {
 const sidebarVariants = {
   open: {
     width: 260,
-    transition: { duration: 0.4, ease: "easeInOut" },
+    transition: { duration: 0.4 },
   },
   closed: {
     width: 80,
-    transition: { duration: 0.4, ease: "easeInOut" },
+    transition: { duration: 0.4 },
   },
 };
 
@@ -36,7 +36,6 @@ const lessonVariants = {
     transition: {
       delay: i * 0.05,
       duration: 0.3,
-      ease: "easeOut",
     },
   }),
 };
