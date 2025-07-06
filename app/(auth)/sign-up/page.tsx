@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 const SignUp = () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
 
@@ -16,7 +18,12 @@ const SignUp = () => {
       return;
     }
     try {
-      const res = await axios.post("/api/registerUser", { username, password });
+      const res = await axios.post("/api/registerUser", {
+        username,
+        password,
+        firstName,
+        lastName,
+      });
 
       if (res.data.message) {
         setTimeout(() => {
@@ -26,6 +33,8 @@ const SignUp = () => {
       setStatusMessage(res.data.message || "User created Successfully");
       setPassword("");
       setUsername("");
+      setFirstName("");
+      setLastName("");
     } catch (error) {
       let errorMessage = "Failed to create user";
       if (axios.isAxiosError(error) && error.response?.data?.error) {
@@ -49,13 +58,6 @@ const SignUp = () => {
                 "radial-gradient(125% 125% at 50% 10%, #000000 40%, #350136 100%)",
             }}
           />
-          <div
-            className="absolute inset-0 z-0"
-            style={{
-              background:
-                "radial-gradient(125% 125% at 50% 100%, 40%, #350136 100%)",
-            }}
-          />
           <div className="p-8 flex flex-col gap-10 z-10 backdrop-blur-xl">
             <div className="flex flex-col gap-1">
               <h1 className="text-lg font-semibold">Sign Up to Sublime AI</h1>
@@ -63,7 +65,34 @@ const SignUp = () => {
                 Sign up and turn curiosity into mastery.
               </p>
             </div>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <div className="flex gap-5">
+                <div className="flex flex-col gap-4">
+                  <label htmlFor="name" className="text-sm">
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter your name"
+                    className="w-37.5 px-4 py-3 rounded-md text-white placeholder:text-sm text-sm bg-white/5"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  <label htmlFor="name" className="text-sm">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter your name"
+                    className="w-37.5 px-4 py-3 rounded-md text-white placeholder:text-sm text-sm bg-white/5"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </div>
+              </div>
               <label htmlFor="username" className="text-sm">
                 Username
               </label>
