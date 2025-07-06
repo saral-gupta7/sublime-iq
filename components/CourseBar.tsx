@@ -1,5 +1,5 @@
 "use client";
-import { ChevronLeft, MoveLeft, HomeIcon } from "lucide-react";
+import { ChevronLeft, MoveLeft } from "lucide-react";
 import { useState } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
@@ -13,6 +13,7 @@ type Lesson = {
 
 type CourseBarProps = {
   lessons: Lesson[];
+  courseTitle: string;
   selectedKey: string;
   onSelect: (key: string) => void;
 };
@@ -20,11 +21,11 @@ type CourseBarProps = {
 const sidebarVariants = {
   open: {
     width: 260,
-    transition: { duration: 0.4 },
+    transition: { duration: 0.2 },
   },
   closed: {
-    width: 80,
-    transition: { duration: 0.4 },
+    width: 60,
+    transition: { duration: 0.2 },
   },
 };
 
@@ -40,37 +41,53 @@ const lessonVariants = {
   }),
 };
 
-const CourseBar = ({ lessons, selectedKey, onSelect }: CourseBarProps) => {
+const CourseBar = ({
+  lessons,
+  selectedKey,
+  onSelect,
+  courseTitle,
+}: CourseBarProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  // useEffect(() => {
+  //   if (sidebarOpen) {
+  //     document.body.style.overflow = "hidden";
+  //   } else {
+  //     document.body.style.overflow = "auto";
+  //   }
+  // }, [sidebarOpen]);
 
   return (
     <motion.aside
-      className="sticky top-0 left-0 h-screen bg-[#161819] backdrop-blur-md border-r border-white/10 text-white z-50 flex flex-col"
+      className={`fixed md:sticky top-0 left-0 h-screen md:border-r bg-transparent md:bg-[#161819]/80  border-white/10 text-white z-50 flex flex-col  ${
+        sidebarOpen && "px-2 backdrop-blur-3xl"
+      }`}
       variants={sidebarVariants}
       animate={sidebarOpen ? "open" : "closed"}
       initial="open"
     >
       {/* Header */}
-      <div className="flex flex-col items-center gap-6 py-6 px-4 border-b border-white/10">
-        <div className="flex items-center justify-between w-full ">
-          <Link href={"/"}>
-            <HomeIcon size={24} />
+      <div
+        className={`flex flex-col items-start gap-6 py-6 px-4 border-white/10 w-full ${
+          sidebarOpen && "border-b"
+        }`}
+      >
+        {/* <Link href={"/"} className="absolute left-5 top-7">
+          <HomeIcon size={18} />
+        </Link> */}
+        {sidebarOpen && (
+          <Link
+            href="/courses"
+            className="flex items-center gap-2 bg-white/10 text-sm px-3 py-2 rounded-sm hover:bg-white/15 transition shrink-0"
+          >
+            <MoveLeft size={18} />
+            {sidebarOpen && <span>All Courses</span>}
           </Link>
-          {sidebarOpen && (
-            <Link
-              href="/courses"
-              className="flex items-center gap-2 bg-white/10 text-sm px-3 py-2 rounded-md hover:bg-white/15 transition"
-            >
-              <MoveLeft size={16} />
-              {sidebarOpen && <span>All Courses</span>}
-            </Link>
-          )}
-        </div>
+        )}
 
-        <div className="flex items-center justify-between w-full">
+        <div className="flex items-center justify-between flex-wrap w-full">
           {sidebarOpen && (
-            <h1 className="text-lg font-semibold uppercase tracking-wide">
-              Sublime IQ
+            <h1 className="text-lg font-semibold capitalize tracking-wide">
+              {courseTitle}
             </h1>
           )}
           <ChevronLeft
@@ -84,34 +101,36 @@ const CourseBar = ({ lessons, selectedKey, onSelect }: CourseBarProps) => {
       </div>
 
       {/* Lessons List */}
-      <ul className="flex-1 overflow-y-auto px-2 py-4 space-y-2">
-        {lessons.map((lesson, index) => {
-          const key = `lesson-${index}`;
-          const isSelected = selectedKey === key;
-          return (
-            <motion.li
-              key={key}
-              custom={index}
-              initial="hidden"
-              animate="visible"
-              variants={lessonVariants}
-              onClick={() => onSelect(key)}
-              className={`rounded-lg px-4 py-3 cursor-pointer transition-all duration-300 ${
-                isSelected ? "bg-[#2b2d31]" : "hover:bg-[#202124]"
-              }`}
-            >
-              {sidebarOpen && (
-                <>
-                  <p className="text-xs text-gray-400 mb-1">
-                    Lesson {index + 1}
-                  </p>
-                  <p className="font-semibold text-sm">{lesson.title}</p>
-                </>
-              )}
-            </motion.li>
-          );
-        })}
-      </ul>
+      {sidebarOpen && (
+        <ul className="flex-1 overflow-y-auto px-2 py-4 space-y-2">
+          {lessons.map((lesson, index) => {
+            const key = `lesson-${index}`;
+            const isSelected = selectedKey === key;
+            return (
+              <motion.li
+                key={key}
+                custom={index}
+                initial="hidden"
+                animate="visible"
+                variants={lessonVariants}
+                onClick={() => onSelect(key)}
+                className={`rounded-lg px-4 py-3 cursor-pointer transition-all duration-300 ${
+                  isSelected ? "bg-[#2b2d31]" : "hover:bg-[#202124]"
+                }`}
+              >
+                {sidebarOpen && (
+                  <>
+                    <p className="text-xs text-gray-400 mb-1">
+                      Lesson {index + 1}
+                    </p>
+                    <p className="font-semibold text-sm">{lesson.title}</p>
+                  </>
+                )}
+              </motion.li>
+            );
+          })}
+        </ul>
+      )}
     </motion.aside>
   );
 };

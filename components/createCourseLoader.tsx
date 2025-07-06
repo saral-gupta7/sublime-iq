@@ -23,7 +23,9 @@ const CourseLoader = ({
 
     if (courseId) {
       interval = setInterval(() => {
-        setCountdown((prev) => prev - 1);
+        if (countdown > 0) {
+          setCountdown((prev) => prev - 1);
+        }
       }, 1000);
 
       timeout = setTimeout(() => {

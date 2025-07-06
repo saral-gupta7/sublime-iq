@@ -17,6 +17,8 @@
     "@types/jsonwebtoken": "^9.0.10",
     "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "dotenv": "^17.0.0",
     "jsonwebtoken": "^9.0.2",
     "lenis": "^1.3.4",
@@ -29,7 +31,8 @@
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
     "rehype-raw": "^7.0.0",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -43,6 +46,7 @@
     "prisma": "^6.11.0",
     "tailwindcss": "^4",
     "tsx": "^4.20.3",
+    "tw-animate-css": "^1.3.5",
     "typescript": "^5"
   }
 }
