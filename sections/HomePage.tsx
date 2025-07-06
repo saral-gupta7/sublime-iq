@@ -6,7 +6,6 @@ import { marked } from "marked";
 import CourseBar from "@/components/CourseBar";
 import Hero from "@/components/Hero";
 import { motion } from "motion/react";
-import { Plus, Ellipsis } from "lucide-react";
 type Lesson = {
   title: string;
   summary: string;
@@ -34,11 +33,9 @@ const HomePage = () => {
         return;
       }
 
-      // ✅ Step 1: Generate lessons from Gemini
       const generateRes = await axios.post("/api/generate", { topic });
       const generatedLessons = generateRes.data.lessons;
 
-      // ✅ Step 2: Save to DB using those lessons
       await axios.post("/api/createCourse", {
         topic,
         lessons: generatedLessons,

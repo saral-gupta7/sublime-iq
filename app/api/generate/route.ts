@@ -27,7 +27,12 @@ export async function POST(req: NextRequest) {
      - ## Headings
      - At least 4 detailed paragraphs separated by space.
      - Real-world explanations
-  5. Strictly do not include YouTube Shorts and prefer strong academic content. Avoid channels like Apna College.
+  RULES:
+  1. Video URLs from Youtube must not include Youtube Shorts. 
+  2. Give slighly long form content i.e content with atleast 15-20 video length priority.
+  3. Give channel who specialize in the niche priority over general content creators.
+  4. If there are university courses for core engineering subjects, for example: MIT Opencourseware, Stanford, Oxford for the niches, give those videos priority. 
+  5. Prioritize videos that are teaching content over roadmap videos.
   
   Respond only with a JSON array like:
   [

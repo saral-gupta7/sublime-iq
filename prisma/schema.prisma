@@ -12,6 +12,8 @@ model Course {
   topic     String   @unique
   createdAt DateTime @default(now())
   lessons   Lesson[]
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
 }
 
 model Lesson {
@@ -22,5 +24,13 @@ model Lesson {
   youtubeQuery   String
   youtubeUrl     String
   articleContent String
-  course         Course @relation(fields: [courseId], references: [id])
+  course         Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  courses   Course[]
 }

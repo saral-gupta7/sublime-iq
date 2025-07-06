@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(course, { status: 201 });
+    return NextResponse.json({ id: course.id }, { status: 201 });
   } catch (error) {
     console.error("createCourse error:", error);
     return NextResponse.json(

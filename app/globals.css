@@ -1,10 +1,13 @@
-/* @import "tailwindcss/typography"; */
-
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
 @import "tailwindcss";
 body {
-  background-color: #111;
+  background-color: #000;
+  font-family: var(--font-main);
 }
 
+@theme {
+  --font-main: Manrope, sans-serif;
+}
 @layer utilities {
   .gradient-color {
     @apply bg-gradient-to-r from-[#478FEB] to-[#383640];

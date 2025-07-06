@@ -1,11 +1,12 @@
 import React from "react";
-import HomePage from "@/sections/HomePage";
+import LandingPage from "@/components/LandingPage";
 // import CourseBar from "@/components/CourseBar";
 
 const Home = () => {
   return (
     <div>
-      <HomePage />
+      <LandingPage />
+      <div className="h-screen bg-black"></div>
     </div>
   );
 };
