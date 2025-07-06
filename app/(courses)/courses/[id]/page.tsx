@@ -24,7 +24,7 @@ const CoursePage = () => {
       const res = await axios.get(`/api/getCourseById?id=${id}`);
       const course = res.data;
 
-      const formattedLessons = course.lessons.map((lesson: Lesson[]) => ({
+      const formattedLessons = course.lessons.map((lesson: Lesson) => ({
         ...lesson,
       }));
 

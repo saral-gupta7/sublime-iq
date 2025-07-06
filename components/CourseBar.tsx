@@ -7,8 +7,8 @@ import Link from "next/link";
 type Lesson = {
   title: string;
   summary: string;
-  youtube_url: string;
-  article_content: string;
+  youtubeUrl: string;
+  articleContent: string;
 };
 
 type CourseBarProps = {
