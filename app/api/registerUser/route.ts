@@ -10,7 +10,7 @@ const hashPassword = async (password: string) => {
 };
 
 export async function POST(req: NextRequest) {
-  const { username, password } = await req.json();
+  const { username, password, firstName, lastName } = await req.json();
 
   if (!username.trim()) {
     console.error("Username can't be empty");
@@ -43,6 +43,8 @@ export async function POST(req: NextRequest) {
     await prisma.user.create({
       data: {
         username,
+        firstName,
+        lastName,
         password: hashedPassword,
       },
       include: {

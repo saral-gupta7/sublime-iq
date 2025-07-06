@@ -76,12 +76,15 @@ const Hero = () => {
         }}
       />
       <motion.div
-        className="flex flex-col gap-10 z-1"
+        className="flex flex-col gap-10 z-1 px-5"
         variants={parentVariant}
         initial="initial"
         animate="animate"
       >
-        <motion.h1 className="text-5xl font-bold" variants={childVariant}>
+        <motion.h1
+          className="text-4xl md:text-5xl font-bold text-center"
+          variants={childVariant}
+        >
           Welcome to Sublime-IQ
         </motion.h1>
 
@@ -106,6 +109,8 @@ const Hero = () => {
             {loading ? <Ellipsis size={24} /> : <Plus size={24} />}
           </button>
         </motion.div>
+
+        <div></div>
       </motion.div>
 
       {statusMessage && (

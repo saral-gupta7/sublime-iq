@@ -3,7 +3,7 @@ import { navItems } from "@/constants/constant";
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -49,9 +49,9 @@ const Navbar = () => {
         </div>
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center justify-end gap-4 mr-4">
-          <button className="">
+          {/* <button className="">
             <Link href={"/sign-up"}>Sign Up</Link>
-          </button>
+          </button> */}
           <button className="border-1 border-white/40 px-4 py-1 rounded-sm hover:bg-white hover:text-black transition-all duration-300">
             <Link href={"/create"}>Create</Link>
           </button>
@@ -67,25 +67,43 @@ const Navbar = () => {
         </button>
       </div>
       {/* Mobile Dropdown */}
+        <AnimatePresence>
       {menuOpen && (
-        <div className="md:hidden absolute top-20 left-0 w-full bg-black/90 backdrop-blur-sm z-50 flex flex-col items-center py-4 gap-4 animate-fade-in">
-          <ul className="flex flex-col gap-4 items-center">
-            {navItems.map(({ label, path, key }) => (
-              <li key={key}>
-                <Link href={path} onClick={() => setMenuOpen(false)}>
-                  {label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <button className="">Sign Up</button>
-          <button className="border-1 border-white/40 px-4 py-1 rounded-sm hover:bg-white hover:text-black transition-all duration-300">
-            <Link href={"/create-course"} onClick={() => setMenuOpen(false)}>
-              Create
-            </Link>
-          </button>
-        </div>
+          <motion.div
+            className="md:hidden absolute top-0 left-0 w-full bg-black/90 backdrop-blur-sm z-50 flex flex-col items-center py-10 gap-4 animate-fade-in h-screen "
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              ease: "easeOut",
+              duration: 0.3,
+            }}
+            exit={{ opacity: 0 }}
+          >
+            <button
+              className="absolute right-0 col-span-2 justify-self-end mr-4"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-label="Open menu"
+            >
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+            <ul className="flex flex-col gap-4 items-center py-10">
+              {navItems.map(({ label, path, key }) => (
+                <li key={key}>
+                  <Link href={path} onClick={() => setMenuOpen(false)}>
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            {/* <button className="">Sign Up</button> */}
+            <button className="border-1 border-white/40 px-4 py-1 rounded-sm hover:bg-white hover:text-black transition-all duration-300">
+              <Link href={"/create"} onClick={() => setMenuOpen(false)}>
+                Create
+              </Link>
+            </button>
+          </motion.div>
       )}
+      </AnimatePresence>
     </article>
   );
 };

@@ -3,8 +3,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { marked } from "marked";
 import CourseBar from "@/components/CourseBar";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
 type Lesson = {
   id: string;
@@ -46,10 +48,12 @@ const CoursePage = () => {
 
       {lessons[selectedIndex] && (
         <div className="flex px-10 py-8 overflow-y-auto max-w-3xl mx-auto flex-col gap-5">
-          <h1 className="text-3xl font-bold mb-4">
+          <h1 className="flex flex-wrap text-lg md:text-3xl font-bold mb-4">
             {lessons[selectedIndex].title}
           </h1>
-          <p className="mb-4">{lessons[selectedIndex].summary}</p>
+          <p className="text-sm md:text-md text-justify">
+            {lessons[selectedIndex].summary}
+          </p>
           {lessons[selectedIndex].youtubeUrl && (
             <iframe
               width="100%"
@@ -61,12 +65,14 @@ const CoursePage = () => {
               className="rounded-lg mb-6"
             />
           )}
-          <div
-            className="prose prose-invert max-w-none"
-            dangerouslySetInnerHTML={{
-              __html: marked.parse(lessons[selectedIndex].articleContent),
-            }}
-          />
+          <div className="prose prose-sm md:prose-base prose-invert max-w-none text-justify">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeRaw]}
+            >
+              {lessons[selectedIndex].articleContent}
+            </ReactMarkdown>
+          </div>
         </div>
       )}
     </div>
