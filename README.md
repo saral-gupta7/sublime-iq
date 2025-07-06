@@ -16,14 +16,14 @@ Sublime IQ is an intelligent learning platform that harnesses the power of AI to
 ### How It Works
 
 1. **Enter Your Topic**: Simply type in what you want to learn
-2. **AI Generation**: Our OpenAI-powered engine creates a structured curriculum
+2. **AI Generation**: Our Gemini AI-powered engine creates a structured curriculum
 3. **Enhanced Learning**: Each lesson includes both written content and relevant YouTube videos
 4. **Interactive Experience**: Navigate through lessons with an intuitive sidebar interface
 
 ## 🚀 Features
 
 - **Instant Course Generation**: Get a complete microcourse in seconds
-- **AI-Curated Content**: Leverages GPT-4 for high-quality, educational content
+- **AI-Curated Content**: Leverages Google Gemini for high-quality, educational content
 - **Video Integration**: Automatically finds relevant YouTube videos using YouTube Data API
 - **Responsive Design**: Beautiful, modern UI built with Next.js and Tailwind CSS
 - **Progressive Learning**: Structured lessons that build upon each other
@@ -33,7 +33,7 @@ Sublime IQ is an intelligent learning platform that harnesses the power of AI to
 
 - **Frontend**: Next.js 15, React 19, TypeScript
 - **Styling**: Tailwind CSS
-- **AI Integration**: OpenAI GPT-4
+- **AI Integration**: Google Gemini API
 - **Video Content**: YouTube Data API v3
 - **Package Manager**: pnpm
 - **Development**: Turbopack for fast development
@@ -44,7 +44,7 @@ Sublime IQ is an intelligent learning platform that harnesses the power of AI to
 
 - Node.js (v18 or higher)
 - pnpm package manager
-- OpenAI API Key
+- Google Gemini API Key
 - YouTube Data API Key
 
 ### Installation
@@ -67,13 +67,13 @@ Sublime IQ is an intelligent learning platform that harnesses the power of AI to
    Create a `.env.local` file in the root directory:
 
    ```env
-   OPENAI_API_KEY=your_openai_api_key_here
+   GEMINI_API_KEY=your_gemini_api_key_here
    YOUTUBE_API_KEY=your_youtube_data_api_key_here
    ```
 
    **Getting API Keys:**
 
-   - **OpenAI API Key**: Visit [OpenAI Platform](https://platform.openai.com/api-keys) to create your API key
+   - **Gemini API Key**: Visit [Google AI Studio](https://makersuite.google.com/app/apikey) to create your API key
    - **YouTube Data API Key**: Go to [Google Cloud Console](https://console.cloud.google.com/), enable YouTube Data API v3, and create credentials
 
 4. **Run the development server**
