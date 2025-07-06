@@ -36,7 +36,7 @@ const CourseLoader = ({
           href={`/courses/${courseId}`}
           className="px-4 py-2 bg-white/10 text-white"
         >
-          Explore the Lessons
+          Explore Your Course
         </Link>
       )}
     </motion.section>
