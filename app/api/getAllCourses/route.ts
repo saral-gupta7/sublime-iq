@@ -12,7 +12,7 @@ export async function GET() {
   } catch (error) {
     console.error("Error fetching courses:", error);
     return NextResponse.json(
-      { error: "Failed to fetch courses. Try again" },
+      { error: "Failed to fetch courses." },
       {
         status: 500,
       }

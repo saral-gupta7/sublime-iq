@@ -86,15 +86,13 @@ export async function POST(req: NextRequest) {
 
     // Don't assume it matches camelCase. Transform it manually:
     const enrichedLessons: Lesson[] = await Promise.all(
-      parsed.map(async (lesson: any) => {
-        const url = await fetchYoutubeVideo(
-          lesson.youtubeQuery || lesson.youtube_query
-        );
+      parsed.map(async (lesson: Lesson) => {
+        const url = await fetchYoutubeVideo(lesson.youtubeQuery);
         return {
           title: lesson.title,
           summary: lesson.summary,
-          youtubeQuery: lesson.youtubeQuery || lesson.youtube_query,
-          articleContent: lesson.articleContent || lesson.article_content,
+          youtubeQuery: lesson.youtubeQuery,
+          articleContent: lesson.articleContent,
           youtubeUrl: url,
         };
       })
