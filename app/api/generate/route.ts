@@ -16,6 +16,17 @@ export async function POST(req: NextRequest) {
     );
   }
   const prompt = `
+
+  Respond ONLY with a **JSON array in camelCase** like:
+  [
+    {
+      "title": "Lesson Title",
+      "summary": "This lesson explains...",
+      "youtubeQuery": "How layout grids work in UI design",
+      "articleContent": "## Grids Matter\\n\\nContent here...\\n\\n"
+    },
+    ...
+  ]
   Create a 5 to 6 part microcourse on the topic: "${topic}".
   
   Each part must include:
@@ -34,16 +45,6 @@ export async function POST(req: NextRequest) {
   4. If there are university courses for core engineering subjects, for example: MIT Opencourseware, Stanford, Oxford for the niches, give those videos priority. 
   5. Prioritize videos that are teaching content over roadmap videos.
   
-  Respond only with a JSON array like:
-  [
-    {
-      "title": "Lesson Title",
-      "summary": "This lesson explains...",
-      "youtube_query": "How layout grids work in UI design",
-      "article_content": "## Grids Matter\\n\\nContent here...\\n\\n"
-    },
-    ...
-  ]
   `;
 
   const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
@@ -51,9 +52,9 @@ export async function POST(req: NextRequest) {
   type Lesson = {
     title: string;
     summary: string;
-    youtube_query: string;
-    article_content: string;
-    youtube_url?: string;
+    youtubeQuery: string;
+    articleContent: string;
+    youtubeUrl: string;
   };
 
   try {
@@ -81,12 +82,21 @@ export async function POST(req: NextRequest) {
         .replace(/\n?```$/, "");
     }
 
-    const parsed: Lesson[] = JSON.parse(cleanedResponse);
+    const parsed = JSON.parse(cleanedResponse);
 
+    // Don't assume it matches camelCase. Transform it manually:
     const enrichedLessons: Lesson[] = await Promise.all(
-      parsed.map(async (lesson: Lesson) => {
-        const url = await fetchYoutubeVideo(lesson.youtube_query);
-        return { ...lesson, youtube_url: url };
+      parsed.map(async (lesson: any) => {
+        const url = await fetchYoutubeVideo(
+          lesson.youtubeQuery || lesson.youtube_query
+        );
+        return {
+          title: lesson.title,
+          summary: lesson.summary,
+          youtubeQuery: lesson.youtubeQuery || lesson.youtube_query,
+          articleContent: lesson.articleContent || lesson.article_content,
+          youtubeUrl: url,
+        };
       })
     );
 

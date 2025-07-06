@@ -12,9 +12,9 @@ export async function POST(req: NextRequest) {
     type LessonInput = {
       title: string;
       summary: string;
-      youtube_query: string;
-      youtube_url?: string;
-      article_content: string;
+      youtubeQuery: string;
+      youtubeUrl?: string;
+      articleContent: string;
     };
 
     const course = await prisma.course.create({
@@ -22,11 +22,8 @@ export async function POST(req: NextRequest) {
         topic,
         lessons: {
           create: (lessons as LessonInput[]).map((lesson) => ({
-            title: lesson.title,
-            summary: lesson.summary,
-            youtubeQuery: lesson.youtube_query,
-            youtubeUrl: lesson.youtube_url || "",
-            articleContent: lesson.article_content,
+            ...lesson,
+            youtubeUrl: lesson.youtubeUrl || "", // fallback for optional field
           })),
         },
       },
