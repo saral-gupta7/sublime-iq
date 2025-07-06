@@ -27,8 +27,10 @@ const SignUp = () => {
       setPassword("");
       setUsername("");
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.error || "Failed to create user";
+      let errorMessage = "Failed to create user";
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      }
       setStatusMessage(errorMessage);
     }
   };
