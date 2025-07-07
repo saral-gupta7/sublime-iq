@@ -1,11 +1,46 @@
 "use client";
 import { navItems } from "@/constants/constant";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+
+type User = {
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+};
+import axios from "axios";
 const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+  const handleLogout = async () => {
+    try {
+      await axios.post("/api/logoutUser");
+      // setUser(null);
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    } catch (error) {
+      console.error("Something went wrong. Try Again!", error);
+    }
+  };
+  useEffect(() => {
+    const handleLoginUser = async () => {
+      try {
+        const res = await axios.get("/api/me", { withCredentials: true });
+        setUser(res.data.user);
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          setUser(null);
+        } else {
+          console.error("Something went wrong. Try Again!");
+        }
+      }
+    };
+    handleLoginUser();
+  }, []);
 
   return (
     <article className="fixed inset-x-0 top-0 h-25 text-white font-main z-50">
@@ -27,12 +62,17 @@ const Navbar = () => {
                 initial="rest"
                 animate="rest"
                 variants={{
-                  rest: { color: "#fff" },
-                  hover: { color: "#f87171" },
+                  rest: { borderBottom: "none" },
+
+                  hover: { borderBottom: "1px solid white" },
+                }}
+                transition={{
+                  duration: 0.05,
+                  ease: "easeOut",
                 }}
               >
                 <Link href={path} className="relative">
-                  {label}
+                  {key === "courses" ? user && label : label}
                   <motion.span
                     layoutId="underline"
                     className="absolute left-0 bottom-0 h-[2px] w-full bg-red-500 origin-left scale-x-0"
@@ -49,12 +89,35 @@ const Navbar = () => {
         </div>
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center justify-end gap-4 mr-4">
-          {/* <button className="">
-            <Link href={"/sign-up"}>Sign Up</Link>
-          </button> */}
-          <button className="border-1 border-white/40 px-4 py-1 rounded-sm hover:bg-white hover:text-black transition-all duration-300">
-            <Link href={"/create"}>Create</Link>
-          </button>
+          {user ? (
+            <div className="flex gap-5 items-center">
+              <p>Welcome, {user.firstName}</p>
+              <button className="border-1 border-white/40 px-4 py-1 rounded-sm hover:bg-white hover:text-black transition-all duration-300">
+                <Link href={"/create"}>Create</Link>
+              </button>
+
+              <button
+                className="border-1 border-red-400 px-3 py-2 text-red-400 rounded-sm hover:bg-red-400 hover:text-white transition-all duration-300 "
+                onClick={handleLogout}
+              >
+                <LogOut size={16} />
+              </button>
+            </div>
+          ) : (
+            <div className="flex gap-5">
+              <Link href={"/sign-in"}>
+                <button className="border-1 border-white/40 px-4 py-1 rounded-sm hover:bg-white hover:text-black transition-all duration-300">
+                  Sign In
+                </button>
+              </Link>
+
+              <Link href={"/sign-up"}>
+                <button className="border-1 border-white/40 px-4 py-1 rounded-sm bg-white text-black transition-all duration-300">
+                  Sign Up
+                </button>
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -67,8 +130,8 @@ const Navbar = () => {
         </button>
       </div>
       {/* Mobile Dropdown */}
-        <AnimatePresence>
-      {menuOpen && (
+      <AnimatePresence>
+        {menuOpen && (
           <motion.div
             className="md:hidden absolute top-0 left-0 w-full bg-black/90 backdrop-blur-sm z-50 flex flex-col items-center py-10 gap-4 animate-fade-in h-screen "
             initial={{ opacity: 0 }}
@@ -102,7 +165,7 @@ const Navbar = () => {
               </Link>
             </button>
           </motion.div>
-      )}
+        )}
       </AnimatePresence>
     </article>
   );

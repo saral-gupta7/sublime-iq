@@ -10,7 +10,7 @@ const Modal = ({ courseId, handleDelete, onClose }: modalProps) => {
   return (
     <AnimatePresence>
       <motion.article
-        className="abs-center w-160 h-80 backdrop-blur-3xl text-white flex-center flex-col gap-10 rounded-lg border-[0.5px]"
+        className="abs-center w-160 h-80 backdrop-blur-3xl text-white flex-center flex-col gap-10 rounded-lg border-[0.5px] z-50"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}

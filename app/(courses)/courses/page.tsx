@@ -4,16 +4,28 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { HomeIcon, CircleMinus } from "lucide-react";
 import Modal from "@/components/modal";
-
+import { useRouter } from "next/navigation";
 type Course = {
   id: string;
   topic: string;
 };
 
+type User = {
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+};
+
+type MeResponse = {
+  user: User;
+};
 const Courses = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [courseToDelete, setCourseToDelete] = useState<Course | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
 
   const handleDelete = async (courseId: string) => {
     try {
@@ -30,20 +42,28 @@ const Courses = () => {
       alert("Something went wrong while deleting the course.");
     }
   };
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("/api/getAllCourses");
-        setCourses(res.data);
+        const res = await axios.get<MeResponse>("/api/me", {
+          withCredentials: true,
+        });
+        setUser(res.data.user);
+        const courseRes = await axios.get("/api/getAllCourses", {
+          withCredentials: true,
+        });
+        setCourses(courseRes.data);
       } catch (err) {
-        console.error("Error fetching courses:", err);
+        console.error("User not authenticated:", err);
+        router.push("/sign-in"); // Redirect unauthenticated users
       } finally {
         setLoading(false);
       }
     };
 
     fetchCourses();
-  }, []);
+  }, [router]);
 
   return (
     <div className="min-h-screen w-full relative bg-black flex justify-center">
@@ -64,7 +84,9 @@ const Courses = () => {
           </Link>
         </div>
 
-        <h1 className="text-4xl font-bold mb-8">Your Courses</h1>
+        <h1 className="text-4xl font-bold mb-8">
+          Welcome, {user && user.firstName}
+        </h1>
 
         {loading ? (
           <p className="text-gray-400">Fetching your courses...</p>
@@ -74,11 +96,13 @@ const Courses = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {courses.map((course) => (
               <div
-                className="relative bg-[#161819] p-6 rounded-lg hover:bg-[#1e1f20] transition"
+                className="relative bg-[#161819] px-8 py-8 rounded-lg hover:bg-[#1e1f20] transition-all duration-300"
                 key={course.id}
               >
                 <Link href={`/courses/${course.id}`}>
-                  <h2 className="text-xl font-semibold mb-2">{course.topic}</h2>
+                  <h2 className="text-lg font-semibold mb-2 capitalize">
+                    {course.topic}
+                  </h2>
                   <p className="text-sm text-gray-400">
                     Click to explore this course
                   </p>

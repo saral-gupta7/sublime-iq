@@ -66,9 +66,11 @@ const LandingPage = () => {
         </motion.p>
 
         <motion.div variants={childVariant}>
-          <button className="flex items-center justify-center px-8 py-2 border-[0.5px] border-white text-white rounded-sm text-md hover:bg-[#eee] hover:text-black transition-all duration-300">
-            <Link href={"/create"}>Try it Now</Link>
-          </button>
+          <Link href={"/create"}>
+            <button className="flex items-center justify-center px-8 py-2 border-[0.5px] border-white text-white rounded-sm text-md hover:bg-[#eee] hover:text-black transition-all duration-300">
+              Try it Now
+            </button>
+          </Link>
         </motion.div>
       </motion.div>
     </div>

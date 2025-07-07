@@ -25,6 +25,8 @@ const CourseLoader = ({
       interval = setInterval(() => {
         if (countdown > 0) {
           setCountdown((prev) => prev - 1);
+        } else {
+          setCountdown(0);
         }
       }, 1000);
 

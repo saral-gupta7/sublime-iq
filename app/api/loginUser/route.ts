@@ -34,23 +34,33 @@ export async function POST(req: NextRequest) {
       {
         id: user.id,
         username: user.username,
-        password: user.password,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
       JWT_SECRET,
       { expiresIn: "7d" }
     );
 
-    return NextResponse.json({
-      message: "Login successful",
-      token,
-      user: {
-        id: user.id,
-        username: user.username,
-        firstName: user.firstName,
-      },
+    console.log({
+      message: "Login Successful",
     });
+    const response = NextResponse.json({
+      message: "Login successful",
+    });
+
+    response.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
+    });
+    return response;
   } catch (error) {
     console.error("Login error", error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to Sign In. Please try again!" },
+      { status: 500 }
+    );
   }
 }

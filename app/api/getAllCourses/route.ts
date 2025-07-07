@@ -1,14 +1,39 @@
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
-export async function GET() {
+const JWT_SECRET = process.env.JWT_SECRET!;
+
+export async function GET(req: NextRequest) {
+  const token = req.cookies.get("token")?.value;
+  if (!token) {
+    return NextResponse.json(
+      {
+        error: "You are not authenticated",
+      },
+      { status: 401 }
+    );
+  }
   try {
-    const courses = await prisma.course.findMany({
+    const decodedUser = jwt.verify(token, JWT_SECRET) as {
+      id: string;
+      username: string;
+      firstName: string;
+      lastName: string;
+    };
+
+    const userCourses = await prisma.course.findMany({
+      where: {
+        userId: decodedUser.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
       include: {
         lessons: true,
       },
     });
-    return NextResponse.json(courses);
+    return NextResponse.json(userCourses);
   } catch (error) {
     console.error("Error fetching courses:", error);
     return NextResponse.json(
