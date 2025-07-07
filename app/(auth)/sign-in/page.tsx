@@ -35,12 +35,11 @@ const SignIn = () => {
       const res = await axios.post("/api/loginUser", { username, password });
 
       if (res.data.message) {
+        setUsername("");
+        setPassword("");
         setStatusMessage("Signed in! Redirecting...");
-        setTimeout(() => {
-          router.push("/courses");
-        }, 1500);
-      } else {
-        router.push("/");
+        setTimeout(() => router.replace("/courses"), 1500);
+        return;
       }
 
       setUsername("");
