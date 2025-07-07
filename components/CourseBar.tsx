@@ -47,7 +47,7 @@ const CourseBar = ({
   onSelect,
   courseTitle,
 }: CourseBarProps) => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   // useEffect(() => {
   //   if (sidebarOpen) {
   //     document.body.style.overflow = "hidden";
@@ -58,7 +58,7 @@ const CourseBar = ({
 
   return (
     <motion.aside
-      className={`fixed md:sticky top-0 left-0 h-screen md:border-r bg-transparent md:bg-[#161819]/80  border-white/10 text-white z-50 flex flex-col  ${
+      className={`fixed md:sticky  top-0 left-0 pb-10 h-screen md:border-r bg-transparent md:bg-[#161819]/80  border-white/10 text-white z-50 flex flex-col  ${
         sidebarOpen && "px-2 backdrop-blur-3xl"
       }`}
       variants={sidebarVariants}

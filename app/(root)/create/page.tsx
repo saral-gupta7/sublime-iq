@@ -1,6 +1,6 @@
 "use client";
 import { Plus, Ellipsis } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 import { motion } from "motion/react";
@@ -37,16 +37,41 @@ const Hero = () => {
   const [loading, setLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const [courseId, setCourseId] = useState("");
+  const [courseCount, setCourseCount] = useState(0);
+  useEffect(() => {
+    const fetchCourseCount = async () => {
+      try {
+        const res = await axios.get("/api/userCourseCount", {
+          withCredentials: true,
+        });
+        setCourseCount(res.data.count); // assume backend returns `{ count: number }`
+      } catch (err) {
+        console.error("Failed to fetch course count", err);
+      }
+    };
 
+    fetchCourseCount();
+  }, []);
   const handleGenerate = async () => {
     if (!topic.trim()) {
-      setStatusMessage("Please Enter a Topic First");
+      setStatusMessage("Please enter a topic first.");
+      setTimeout(() => {
+        setStatusMessage("");
+      }, 3000);
+      return;
+    }
+
+    if (courseCount >= 3) {
+      setStatusMessage("You can only create up to 3 courses.");
+      setTimeout(() => {
+        setStatusMessage("");
+      }, 3000);
       return;
     }
 
     try {
       setLoading(true);
-      setStatusMessage("Generating your course...Be right there!");
+      setStatusMessage("Generating your course... Be right there!");
 
       const generateRes = await axios.post("/api/generate", { topic });
       const generatedLessons = generateRes.data.lessons;
@@ -55,12 +80,14 @@ const Hero = () => {
         topic,
         lessons: generatedLessons,
       });
-      setStatusMessage("Course created Successfully!");
+
+      setStatusMessage("Course created successfully!");
       setCourseId(createdCourse.data.id);
       setTopic("");
+      setCourseCount((prev) => prev + 1); // update count on success
     } catch (error) {
       console.error(error);
-      setStatusMessage("Something went wrong! Please retry later!");
+      setStatusMessage("Something went wrong! Please retry later.");
     } finally {
       setLoading(false);
     }

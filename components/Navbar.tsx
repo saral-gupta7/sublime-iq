@@ -2,7 +2,7 @@
 import { navItems } from "@/constants/constant";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut, Plus } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
 type User = {
@@ -46,11 +46,9 @@ const Navbar = () => {
     <article className="fixed inset-x-0 top-0 h-25 text-white font-main z-50">
       <div className="absolute inset-0 bg-transparent grid grid-cols-3 items-center backdrop-blur-sm place-items-center">
         {/* Logo */}
-        <div className="">
-          <h1>
-            <Link href={"/"}>Sublime IQ</Link>
-          </h1>
-        </div>
+        <h1 className="font-semibold">
+          <Link href={"/"}>Sublime IQ</Link>
+        </h1>
         {/* Desktop Nav */}
         <div className="hidden md:flex ">
           <ul className="flex gap-6 items-center">
@@ -91,10 +89,14 @@ const Navbar = () => {
         <div className="hidden md:flex items-center justify-end gap-4 mr-4">
           {user ? (
             <div className="flex gap-5 items-center">
-              <p>Welcome, {user.firstName}</p>
-              <button className="border-1 border-white/40 px-4 py-1 rounded-sm hover:bg-white hover:text-black transition-all duration-300">
-                <Link href={"/create"}>Create</Link>
-              </button>
+              <p className="text-gradient font-semibold">
+                Welcome, {user.firstName}
+              </p>
+              <Link href={"/create"}>
+                <button className="border-1 border-white/40 px-3 py-2 rounded-sm hover:bg-white hover:text-black transition-all duration-300">
+                  <Plus size={16} />
+                </button>
+              </Link>
 
               <button
                 className="border-1 border-red-400 px-3 py-2 text-red-400 rounded-sm hover:bg-red-400 hover:text-white transition-all duration-300 "
@@ -133,37 +135,74 @@ const Navbar = () => {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            className="md:hidden absolute top-0 left-0 w-full bg-black/90 backdrop-blur-sm z-50 flex flex-col items-center py-10 gap-4 animate-fade-in h-screen "
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            className="md:hidden absolute top-0 left-0 w-full bg-black/90 backdrop-blur-sm z-50 flex-center flex-col py-10 gap-4 h-screen "
+            initial={{ left: "100%", opacity: 0 }}
+            animate={{ opacity: 1, left: 0 }}
             transition={{
               ease: "easeOut",
-              duration: 0.3,
+              duration: 0.2,
             }}
-            exit={{ opacity: 0 }}
+            exit={{ opacity: 0, left: "100%" }}
           >
             <button
-              className="absolute right-0 col-span-2 justify-self-end mr-4"
-              onClick={() => setMenuOpen((prev) => !prev)}
-              aria-label="Open menu"
+              className="absolute right-4 top-10"
+              onClick={() => setMenuOpen(false)}
+              aria-label="Close menu"
             >
-              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+              <X size={24} />
             </button>
-            <ul className="flex flex-col gap-4 items-center py-10">
+            {user && (
+              <p className="text-gradient text-2xl font-semibold">
+                Welcome, {user.firstName}
+              </p>
+            )}
+
+            <ul className="flex flex-col gap-4 items-center py-10 mt-6">
               {navItems.map(({ label, path, key }) => (
-                <li key={key}>
-                  <Link href={path} onClick={() => setMenuOpen(false)}>
-                    {label}
-                  </Link>
+                <li
+                  key={key}
+                  className="px-10 py-4 w-full rounded-xs hover:bg-white/5 transition-all duration-200"
+                >
+                  {(key !== "courses" || user) && (
+                    <Link href={path} onClick={() => setMenuOpen(false)}>
+                      {label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
-            {/* <button className="">Sign Up</button> */}
-            <button className="border-1 border-white/40 px-4 py-1 rounded-sm hover:bg-white hover:text-black transition-all duration-300">
-              <Link href={"/create"} onClick={() => setMenuOpen(false)}>
-                Create
-              </Link>
-            </button>
+
+            {user ? (
+              <div className="flex  gap-4 items-center">
+                <Link href="/create" onClick={() => setMenuOpen(false)}>
+                  <button className="border-1 border-white/40 px-3 py-2 rounded-sm hover:bg-white hover:text-black transition-all duration-300">
+                    <Plus size={18} />
+                  </button>
+                </Link>
+                <button
+                  className="border-1 border-red-400 px-3 py-2 text-red-400 rounded-sm hover:bg-red-400 hover:text-white transition-all duration-300"
+                  onClick={() => {
+                    handleLogout();
+                    setMenuOpen(false);
+                  }}
+                >
+                  <LogOut size={16} />
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4 items-center">
+                <Link href="/sign-in" onClick={() => setMenuOpen(false)}>
+                  <button className="border-1 border-white/40 px-4 py-1 rounded-sm hover:bg-white hover:text-black transition-all duration-300">
+                    Sign In
+                  </button>
+                </Link>
+                <Link href="/sign-up" onClick={() => setMenuOpen(false)}>
+                  <button className="border-1 border-white/40 px-4 py-1 rounded-sm bg-white text-black transition-all duration-300">
+                    Sign Up
+                  </button>
+                </Link>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

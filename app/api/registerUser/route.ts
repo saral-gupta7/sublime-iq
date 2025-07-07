@@ -3,6 +3,7 @@ import { NextResponse, NextRequest } from "next/server";
 
 import prisma from "@/lib/prisma";
 
+import { registerSchema } from "@/lib/schema";
 const saltRounds = 12;
 
 const hashPassword = async (password: string) => {
@@ -10,45 +11,34 @@ const hashPassword = async (password: string) => {
 };
 
 export async function POST(req: NextRequest) {
-  const { username, password, firstName, lastName } = await req.json();
+  const body = await req.json();
+  const parsed = registerSchema.safeParse(body);
 
-  if (!username.trim()) {
-    console.error("Username can't be empty");
-    return NextResponse.json(
-      { error: "Username can't be empty" },
-      { status: 400 }
-    );
+  if (!parsed.success) {
+    const errorMessages = parsed.error.errors.map((err) => err.message);
+    return NextResponse.json({ error: errorMessages }, { status: 400 });
   }
+  const { username, password, firstName, lastName } = parsed.data;
 
-  if (!password.trim()) {
-    console.error("Password can't be empty");
-    return NextResponse.json(
-      { error: "Password can't be empty" },
-      { status: 400 }
-    );
-  }
   const hashedPassword = await hashPassword(password);
 
   try {
-    // const existingUser = await prisma.user.findUnique({
-    //   where: { username },
-    // });
+    const existingUser = await prisma.user.findUnique({
+      where: { username },
+    });
 
-    // if (existingUser) {
-    //   return NextResponse.json(
-    //     { error: "Username already exist" },
-    //     { status: 409 }
-    //   );
-    // }
+    if (existingUser) {
+      return NextResponse.json(
+        { error: "Username already exist" },
+        { status: 409 }
+      );
+    }
     await prisma.user.create({
       data: {
         username,
         firstName,
         lastName,
         password: hashedPassword,
-      },
-      include: {
-        courses: true,
       },
     });
 

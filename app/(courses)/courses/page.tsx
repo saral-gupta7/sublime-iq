@@ -2,7 +2,7 @@
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { HomeIcon, CircleMinus } from "lucide-react";
+import { HomeIcon, X, Plus } from "lucide-react";
 import Modal from "@/components/modal";
 import { useRouter } from "next/navigation";
 type Course = {
@@ -56,7 +56,7 @@ const Courses = () => {
         setCourses(courseRes.data);
       } catch (err) {
         console.error("User not authenticated:", err);
-        router.push("/sign-in"); // Redirect unauthenticated users
+        router.push("/sign-in");
       } finally {
         setLoading(false);
       }
@@ -74,17 +74,27 @@ const Courses = () => {
             "radial-gradient(125% 125% at 50% 90%, #000000 40%, #0d1a36 100%)",
         }}
       />
-      <div className="relative z-2 text-white p-10 flex flex-col items-start gap-5 md:min-w-4xl max-w-screen-md mx-auto">
-        <div>
+      <div
+        className={`relative z-2 text-white p-10 flex flex-col items-start gap-5 md:min-w-4xl max-w-screen-md mx-auto ${
+          courseToDelete && "blur-md transition-all"
+        }`}
+      >
+        <div className="flex justify-between w-full">
           <Link href={"/"}>
-            <span className="flex gap-2 items-center px-4 py-2 bg-white/10 w-fit rounded-sm">
+            <span className="flex gap-2 items-center px-4 py-3 bg-white/10 w-fit rounded-sm">
               <HomeIcon size={18} />
-              Home
+            </span>
+          </Link>
+
+          <Link href={"/create"}>
+            <span className="flex gap-2 items-center px-4 py-3 bg-white/10 w-fit rounded-sm hover:bg-white/15 transition-all duration-300 text-sm">
+              New
+              <Plus size={18} />
             </span>
           </Link>
         </div>
 
-        <h1 className="text-4xl font-bold mb-8">
+        <h1 className="text-4xl font-semibold mb-8 text-gradient">
           Welcome, {user && user.firstName}
         </h1>
 
@@ -96,7 +106,7 @@ const Courses = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {courses.map((course) => (
               <div
-                className="relative bg-[#161819] px-8 py-8 rounded-lg hover:bg-[#1e1f20] transition-all duration-300"
+                className="relative bg-[#15141E] px-8 py-8 rounded-lg hover:bg-[#08090D] transition-all duration-300 border-[0.5px] border-gray-700"
                 key={course.id}
               >
                 <Link href={`/courses/${course.id}`}>
@@ -113,24 +123,25 @@ const Courses = () => {
                     onClick={() => setCourseToDelete(course)}
                     className="hover:bg-white/10 rounded-full p-1"
                   >
-                    <CircleMinus size={16} className="text-white" />
+                    <X size={16} className="text-red-400" />
                   </button>
                 </div>
               </div>
             ))}
           </div>
         )}
-        {courseToDelete && (
-          <Modal
-            courseId={courseToDelete.id}
-            handleDelete={(id: string) => {
-              handleDelete(id);
-              setCourseToDelete(null); // close modal after delete
-            }}
-            onClose={() => setCourseToDelete(null)}
-          />
-        )}
       </div>
+
+      {courseToDelete && (
+        <Modal
+          courseId={courseToDelete.id}
+          handleDelete={(id: string) => {
+            handleDelete(id);
+            setCourseToDelete(null); // close modal after delete
+          }}
+          onClose={() => setCourseToDelete(null)}
+        />
+      )}
     </div>
   );
 };

@@ -7,26 +7,30 @@ const JWT_SECRET = process.env.JWT_SECRET!;
 
 export async function POST(req: NextRequest) {
   try {
-    const { username, password } = await req.json();
-    const user = await prisma.user.findUnique({
-      where: { username },
-    });
+    const body = await req.json();
+    const { username, password } = body;
 
-    if (!user) {
-      console.error("User not found!");
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    if (!username?.trim() || !password?.trim()) {
+      return NextResponse.json(
+        { error: "Username and password are required." },
+        { status: 400 }
+      );
     }
 
-    const isPasswordCorrect = bcrypt.compare(password, user.password);
+    const user = await prisma.user.findUnique({ where: { username } });
 
+    if (!user) {
+      return NextResponse.json(
+        { error: "Username not found." },
+        { status: 404 }
+      );
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
       return NextResponse.json(
-        {
-          error: "Incorrect Password. Please try again",
-        },
-        {
-          status: 401,
-        }
+        { error: "Incorrect password. Please try again." },
+        { status: 401 }
       );
     }
 
@@ -41,9 +45,6 @@ export async function POST(req: NextRequest) {
       { expiresIn: "7d" }
     );
 
-    console.log({
-      message: "Login Successful",
-    });
     const response = NextResponse.json({
       message: "Login successful",
     });
@@ -52,14 +53,15 @@ export async function POST(req: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 7,
       path: "/",
     });
+
     return response;
   } catch (error) {
     console.error("Login error", error);
     return NextResponse.json(
-      { error: "Failed to Sign In. Please try again!" },
+      { error: "Login failed. Please try again later." },
       { status: 500 }
     );
   }

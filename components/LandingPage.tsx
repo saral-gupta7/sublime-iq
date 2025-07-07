@@ -2,6 +2,8 @@
 import { motion } from "motion/react";
 import Link from "next/link";
 import { PointerHighlight } from "./ui/pointer-highlight";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const headerVariant = {
   initial: {
@@ -31,6 +33,22 @@ const childVariant = {
 };
 
 const LandingPage = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const res = await axios.get("/api/me", { withCredentials: true });
+        if (res.data?.user) {
+          setIsLoggedIn(true);
+        }
+      } catch {
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkUser();
+  }, []);
   return (
     <div className="min-h-screen w-full relative bg-[#000] flex justify-center items-center text-[#eee]">
       <div
@@ -65,12 +83,20 @@ const LandingPage = () => {
           Skip the Information Overload - Get Focused Learning Modules
         </motion.p>
 
-        <motion.div variants={childVariant}>
-          <Link href={"/create"}>
-            <button className="flex items-center justify-center px-8 py-2 border-[0.5px] border-white text-white rounded-sm text-md hover:bg-[#eee] hover:text-black transition-all duration-300">
-              Try it Now
+        <motion.div variants={childVariant} className="flex gap-5">
+          <Link href={isLoggedIn ? "/courses" : "/create"}>
+            <button className="flex items-center justify-center px-8 py-2 border-[0.25px] border-white text-white rounded-sm text-md hover:bg-[#eee] hover:text-black transition-all duration-300">
+              {isLoggedIn ? "View Courses" : "Try it Now"}
             </button>
           </Link>
+
+          {isLoggedIn && (
+            <Link href={"/create"}>
+              <button className="flex items-center justify-center px-8 py-2 border-[0.25px] border-white text-white rounded-sm text-md hover:bg-[#eee] hover:text-black transition-all duration-300">
+                Create
+              </button>
+            </Link>
+          )}
         </motion.div>
       </motion.div>
     </div>

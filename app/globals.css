@@ -141,3 +141,7 @@ body {
 @utility flex-center {
   @apply flex justify-center items-center;
 }
+
+@utility text-gradient {
+  @apply bg-gradient-to-r from-[#F2EEFF] to-[#A29CCF] text-transparent bg-clip-text;
+}

@@ -12,7 +12,7 @@ model Course {
   topic     String   @unique
   createdAt DateTime @default(now())
   lessons   Lesson[]
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
 }
 

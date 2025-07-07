@@ -25,6 +25,13 @@ export async function POST(req: NextRequest) {
       firstName: string;
     };
     const userId = decoded.id;
+    const userCourseCount = await prisma.course.count({ where: { userId } });
+    if (userCourseCount >= 3) {
+      return NextResponse.json(
+        { error: "You can only create up to 3 courses." },
+        { status: 403 }
+      );
+    }
     const { topic, lessons } = await req.json();
 
     if (!topic || !Array.isArray(lessons)) {

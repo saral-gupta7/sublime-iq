@@ -10,7 +10,7 @@ const Modal = ({ courseId, handleDelete, onClose }: modalProps) => {
   return (
     <AnimatePresence>
       <motion.article
-        className="abs-center w-160 h-80 backdrop-blur-3xl text-white flex-center flex-col gap-10 rounded-lg border-[0.5px] z-50"
+        className="abs-center w-full max-w-xs md:max-w-3xl h-80 backdrop-blur-3xl text-white flex-center flex-col gap-10 rounded-lg border-[0.25px] z-50 border-gray-600 "
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -22,13 +22,13 @@ const Modal = ({ courseId, handleDelete, onClose }: modalProps) => {
         <div className="flex gap-4">
           <button
             onClick={() => handleDelete(courseId)}
-            className="bg-red-500 px-4 py-2 rounded-sm hover:bg-red-600 transition-colors duration-300"
+            className="bg-red-500 px-4 py-2 rounded-sm hover:bg-red-600 transition-colors duration-300 text-sm md:text-md"
           >
             Delete Course
           </button>
           <button
             onClick={onClose}
-            className="bg-white/10 px-4 py-2 rounded-sm hover:bg-white/20 transition-colors duration-300"
+            className="bg-white/10 px-4 py-2 rounded-sm hover:bg-white/20 transition-colors duration-300 text-sm md:text-md"
           >
             Cancel
           </button>
