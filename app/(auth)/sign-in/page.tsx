@@ -38,7 +38,7 @@ const SignIn = () => {
         setUsername("");
         setPassword("");
         setStatusMessage("Signed in! Redirecting...");
-        setTimeout(() => router.replace("/courses"), 1500);
+        setTimeout(() => (window.location.href = "/courses"), 700);
         return;
       }
 
