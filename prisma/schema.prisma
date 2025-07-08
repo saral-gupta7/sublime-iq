@@ -9,11 +9,13 @@ datasource db {
 
 model Course {
   id        String   @id @default(cuid())
-  topic     String   @unique
+  topic     String
   createdAt DateTime @default(now())
   lessons   Lesson[]
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+
+  @@unique([userId, topic])
 }
 
 model Lesson {
