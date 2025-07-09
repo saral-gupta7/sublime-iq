@@ -100,6 +100,7 @@ const Hero = () => {
           animate: { opacity: 1, transition: { staggerChildren: 0.15 } },
         }}
       >
+        <h1 className="text-2xl sm:text-4xl ">Welcome to Sublime-IQ</h1>
         {messages.map((msg, idx) => (
           <motion.div
             key={idx}

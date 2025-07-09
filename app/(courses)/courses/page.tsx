@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 type Course = {
   id: string;
   topic: string;
+  language: string;
 };
 
 type User = {
@@ -30,11 +31,10 @@ const Courses = () => {
   const handleDelete = async (courseId: string) => {
     try {
       const res = await axios.delete("/api/deleteCourse", {
-        data: { courseId }, // ✅ pass in request body using `data` for DELETE
+        data: { courseId },
       });
 
       if (res.status === 200) {
-        // Remove deleted course from UI
         setCourses((prev) => prev.filter((course) => course.id !== courseId));
       }
     } catch (error) {
@@ -109,7 +109,13 @@ const Courses = () => {
                 className="relative bg-[#15141E] px-8 py-8 rounded-lg hover:bg-[#08090D] transition-all duration-300 border-[0.5px] border-gray-700"
                 key={course.id}
               >
-                <Link href={`/courses/${course.id}`}>
+                <Link
+                  href={`/courses/${course.id}`}
+                  className="flex flex-col gap-2"
+                >
+                  <p className="text-xs bg-white/10 w-fit px-2 py-1 rounded-xs">
+                    {course.language}
+                  </p>
                   <h2 className="text-lg font-semibold mb-2 capitalize">
                     {course.topic}
                   </h2>
