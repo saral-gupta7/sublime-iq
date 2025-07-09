@@ -1,4 +1,4 @@
-# 🧠 Sublime IQ - AI-Powered Microcourse Generator
+\*# 🧠 Sublime IQ - AI-Powered Microcourse Generator
 
 > **"Learning has never been this personalized. Enter any topic, get a complete microcourse in seconds."**
 
@@ -69,6 +69,8 @@ Sublime IQ is an intelligent learning platform that harnesses the power of AI to
    ```env
    GEMINI_API_KEY=your_gemini_api_key_here
    YOUTUBE_API_KEY=your_youtube_data_api_key_here
+   DATABASE_URL=your_database_connection_string_here
+   JWT_SECRET=your_jwt_secret_key_here
    ```
 
    **Getting API Keys:**
@@ -104,3 +106,5 @@ This project is licensed under the MIT License.
 ---
 
 **Built with ❤️ for learners everywhere. Start your learning journey today with Sublime IQ!**
+
+-

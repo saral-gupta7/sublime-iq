@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
         { status: 403 }
       );
     }
-    const { topic, lessons } = await req.json();
+    const { topic, lessons, language } = await req.json();
 
     if (!topic || !Array.isArray(lessons)) {
       return NextResponse.json({ error: "No Topic Provided" }, { status: 400 });
@@ -50,6 +50,7 @@ export async function POST(req: NextRequest) {
       data: {
         topic,
         userId,
+        language: language || "English",
         lessons: {
           create: (lessons as LessonInput[]).map((lesson) => ({
             ...lesson,

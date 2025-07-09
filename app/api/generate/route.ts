@@ -5,7 +5,8 @@ import { fetchYoutubeVideo } from "@/lib/youtube";
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
 
 export async function POST(req: NextRequest) {
-  const { topic } = await req.json();
+  const { topic, language } = await req.json();
+  const targetLanguage = language?.trim() || "English";
 
   if (!topic || !topic.trim()) {
     return NextResponse.json(
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
     },
     ...
   ]
-  Create a 5 to 6 part microcourse on the topic: "${topic}".
+  Create a 5 to 6 part microcourse on the topic: "${topic}".Write all content, including summaries and explanations, in "${targetLanguage}".
   
   Each part must include:
   
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
   
   `;
 
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
 
   type Lesson = {
     title: string;

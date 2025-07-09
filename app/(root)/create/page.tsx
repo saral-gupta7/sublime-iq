@@ -1,7 +1,7 @@
 "use client";
-import { Plus, Ellipsis } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { languages } from "@/constants/constant";
 
 import { motion } from "motion/react";
 import CourseLoader from "@/components/createCourseLoader";
@@ -38,6 +38,7 @@ const Hero = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const [courseId, setCourseId] = useState("");
   const [courseCount, setCourseCount] = useState(0);
+  const [language, setLanguage] = useState("");
   useEffect(() => {
     const fetchCourseCount = async () => {
       try {
@@ -73,11 +74,17 @@ const Hero = () => {
       setLoading(true);
       setStatusMessage("Generating your course... Be right there!");
 
-      const generateRes = await axios.post("/api/generate", { topic });
+      const selectedLang = language || "English";
+      const generateRes = await axios.post("/api/generate", {
+        topic,
+        language: selectedLang,
+      });
+
       const generatedLessons = generateRes.data.lessons;
 
       const createdCourse = await axios.post("/api/createCourse", {
         topic,
+        language: selectedLang,
         lessons: generatedLessons,
       });
 
@@ -115,25 +122,43 @@ const Hero = () => {
           Welcome to Sublime-IQ
         </motion.h1>
 
-        <motion.div className="flex gap-4" variants={childVariant}>
-          <input
-            type="text"
-            className="border-2 border-white rounded-full px-5 py-3 text-white bg-transparent w-full"
-            placeholder="What would you like to learn today?"
-            onChange={(e) => setTopic(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleGenerate();
-              }
-            }}
-            value={topic}
-          />
+        <motion.div
+          className="flex flex-col items-center gap-4"
+          variants={childVariant}
+        >
+          <div className="flex gap-5 w-full">
+            <input
+              type="text"
+              className="border-1 border-white rounded-sm px-5 py-3 text-white bg-transparent w-full"
+              placeholder="What would you like to learn today?"
+              onChange={(e) => setTopic(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleGenerate();
+                }
+              }}
+              value={topic}
+            />
 
-          <button
-            onClick={handleGenerate}
-            className="h-14 w-16 text-3xl bg-[#eee] text-black rounded-full hover:bg-black hover:text-white transition-all duration-300 flex items-center justify-center"
-          >
-            {loading ? <Ellipsis size={24} /> : <Plus size={24} />}
+            <div className="relative w-full md:w-auto">
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="appearance-none border-2 border-white bg-transparent text-white  px-4 pr-8 py-3  rounded-sm w-full flex-center"
+              >
+                {languages.map((lang) => (
+                  <option key={lang.code} value={lang.code} className="">
+                    {lang.label}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute right-4 top-1/2 transform -translate-y-1/2 text-white">
+                ▼
+              </div>
+            </div>
+          </div>
+          <button onClick={handleGenerate} className="create-button">
+            {loading ? "Generating..." : "Generate"}
           </button>
         </motion.div>
 

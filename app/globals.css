@@ -18,6 +18,15 @@ body {
   }
 }
 
+@layer components {
+  .create-button {
+    @apply px-5 py-3 text-lg text-white bg-white/10 rounded-md flex items-center justify-center transition-all duration-300;
+  }
+
+  .create-button:hover {
+    @apply bg-white text-black;
+  }
+}
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

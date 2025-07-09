@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { motion } from "motion/react";
 import CourseBar from "@/components/CourseBar";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -49,7 +50,16 @@ const CoursePage = () => {
         courseTitle={courseTitle}
       />
 
-      <div className="w-full">
+      <motion.div
+        className="w-full"
+        initial={{ opacity: 0, y: -100 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 0.5,
+          ease: "easeOut",
+          delay: 1,
+        }}
+      >
         <div className="px-10 max-w-3xl mx-auto flex flex-col bg-neutral-800">
           {/* {courseTitle} */}
         </div>
@@ -82,7 +92,7 @@ const CoursePage = () => {
             </div>
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

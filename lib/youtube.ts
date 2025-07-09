@@ -2,8 +2,8 @@ import axios from "axios";
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
-// Define minimum duration (in seconds): 15 minutes
 const MIN_VIDEO_LENGTH = 5 * 60;
+const MAX_VIDEO_LENGTH = 4 * 60 * 60;
 
 const BLOCKED_CHANNELS = [
   "Cocomelon",
@@ -74,7 +74,10 @@ export async function fetchYoutubeVideo(query: string) {
     const durationSeconds = parseISODuration(isoDuration);
 
     // Step 3: Only return if duration >= 15 minutes
-    if (durationSeconds >= MIN_VIDEO_LENGTH) {
+    if (
+      durationSeconds >= MIN_VIDEO_LENGTH &&
+      durationSeconds <= MAX_VIDEO_LENGTH
+    ) {
       return `https://www.youtube.com/watch?v=${videoId}`;
     }
   }

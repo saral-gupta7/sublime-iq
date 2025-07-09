@@ -15,7 +15,6 @@ const CourseLoader = ({
   const router = useRouter();
 
   useEffect(() => {
-    // Disable scroll
     document.body.style.overflow = "hidden";
 
     let interval: NodeJS.Timeout;
@@ -23,11 +22,10 @@ const CourseLoader = ({
 
     if (courseId) {
       interval = setInterval(() => {
-        if (countdown > 0) {
-          setCountdown((prev) => prev - 1);
-        } else {
-          setCountdown(0);
-        }
+        setCountdown((prev) => {
+          if (prev > 0) return prev - 1;
+          return 0;
+        });
       }, 1000);
 
       timeout = setTimeout(() => {
