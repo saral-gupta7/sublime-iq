@@ -71,24 +71,15 @@ const CourseBar = ({
           sidebarOpen && "border-b"
         }`}
       >
-        {/* <Link href={"/"} className="absolute left-5 top-7">
-          <HomeIcon size={18} />
-        </Link> */}
-        {sidebarOpen && (
-          <Link
-            href="/courses"
-            className="flex items-center gap-2 bg-white/10 text-sm px-3 py-2 rounded-sm hover:bg-white/15 transition shrink-0"
-          >
-            <MoveLeft size={18} />
-            {sidebarOpen && <span>All Courses</span>}
-          </Link>
-        )}
-
-        <div className="flex items-center justify-between flex-wrap w-full">
+        <div className="flex justify-between items-center w-full">
           {sidebarOpen && (
-            <h1 className="text-lg font-semibold capitalize tracking-wide">
-              {courseTitle}
-            </h1>
+            <Link
+              href="/courses"
+              className="flex items-center gap-2 bg-white/10 text-sm px-3 py-2 rounded-sm hover:bg-white/15 transition shrink-0"
+            >
+              <MoveLeft size={18} />
+              {sidebarOpen && <span>All Courses</span>}
+            </Link>
           )}
           <ChevronLeft
             size={28}
@@ -97,6 +88,14 @@ const CourseBar = ({
             }`}
             onClick={() => setSidebarOpen((prev) => !prev)}
           />
+        </div>
+
+        <div className="flex flex-wrap w-full">
+          {sidebarOpen && (
+            <h1 className="text-lg font-semibold capitalize tracking-wide">
+              {courseTitle}
+            </h1>
+          )}
         </div>
       </div>
 
