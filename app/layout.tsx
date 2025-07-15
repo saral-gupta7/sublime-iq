@@ -3,7 +3,6 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import ReactLenis from "lenis/react";
-import { ClerkProvider } from "@clerk/nextjs";
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
@@ -20,15 +19,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={`${manrope.variable} antialiased`}>
-          <ReactLenis root>
-            {children}
-            <Analytics />
-          </ReactLenis>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body className={`${manrope.variable} antialiased`}>
+        <ReactLenis root>
+          {children}
+          <Analytics />
+        </ReactLenis>
+      </body>
+    </html>
   );
 }
