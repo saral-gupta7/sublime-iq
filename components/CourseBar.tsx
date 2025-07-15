@@ -48,17 +48,9 @@ const CourseBar = ({
   courseTitle,
 }: CourseBarProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  // useEffect(() => {
-  //   if (sidebarOpen) {
-  //     document.body.style.overflow = "hidden";
-  //   } else {
-  //     document.body.style.overflow = "auto";
-  //   }
-  // }, [sidebarOpen]);
-
   return (
     <motion.aside
-      className={`fixed md:sticky  top-0 left-0 pb-10 h-screen md:border-r bg-transparent md:bg-[#161819]/80  border-white/10 text-white z-50 flex flex-col  ${
+      className={`fixed overflow-y-auto top-0 left-0 pb-10 h-screen md:border-r bg-transparent md:bg-[#161819]/80  border-white/10 text-white z-50 flex flex-col ${
         sidebarOpen && "px-2 backdrop-blur-3xl"
       }`}
       variants={sidebarVariants}
@@ -101,7 +93,7 @@ const CourseBar = ({
 
       {/* Lessons List */}
       {sidebarOpen && (
-        <ul className="flex-1 overflow-y-auto px-2 py-4 space-y-2">
+        <ul className="flex-1 px-2 py-4 space-y-2">
           {lessons.map((lesson, index) => {
             const key = `lesson-${index}`;
             const isSelected = selectedKey === key;

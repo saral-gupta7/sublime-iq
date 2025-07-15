@@ -6,11 +6,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 
-const SignIn = () => {
+import { Eye, EyeOff } from "lucide-react";
+
+const SignInPage = () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -107,17 +110,26 @@ const SignIn = () => {
               <label htmlFor="password" className="text-sm">
                 Password
               </label>
-              <input
-                type="password"
-                id="password"
-                placeholder="Enter password"
-                className="w-80 px-4 py-3 rounded-md bg-white/5 text-sm text-white placeholder:text-sm"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setStatusMessage("");
-                }}
-              />
+              <div className="relative w-80">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  placeholder="Enter password"
+                  className="w-full px-4 py-3 pr-12 rounded-md bg-white/5 text-sm text-white placeholder:text-sm"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setStatusMessage("");
+                  }}
+                />
+
+                <div
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </div>
+              </div>
 
               <button
                 type="submit"
@@ -151,4 +163,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignInPage;

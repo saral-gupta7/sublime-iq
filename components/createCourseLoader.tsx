@@ -4,6 +4,8 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { LoaderOne } from "@/components/ui/loader";
+
 const CourseLoader = ({
   statusMessage,
   courseId,
@@ -50,7 +52,8 @@ const CourseLoader = ({
         duration: 0.3,
       }}
     >
-      <h1 className="text-xl">{statusMessage}</h1>
+      <h1 className="text-lg">{statusMessage}</h1>
+      {!courseId && <LoaderOne />}
 
       {courseId && (
         <>

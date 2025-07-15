@@ -8,12 +8,15 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { registerSchema } from "@/lib/schema";
 
+import { Eye, EyeOff } from "lucide-react";
+
 const SignUp = () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -157,18 +160,27 @@ const SignUp = () => {
               <label htmlFor="password" className="text-sm">
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                placeholder="Enter password"
-                className="w-80 px-4 py-3 rounded-md text-white bg-white/5 placeholder:text-sm text-sm"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setErrors({});
-                  setStatusMessage("");
-                }}
-              />
+              <div className="relative w-80">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter password"
+                  className="w-80 px-4 py-3 rounded-md text-white bg-white/5 placeholder:text-sm text-sm"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setErrors({});
+                    setStatusMessage("");
+                  }}
+                />
+
+                <div
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </div>
+              </div>
 
               <button
                 type="submit"
