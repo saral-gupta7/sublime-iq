@@ -1,5 +1,5 @@
 "use client";
-
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -7,55 +7,38 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { registerSchema } from "@/lib/schema";
-
 import { Eye, EyeOff } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod";
+
+type registerForm = z.infer<typeof registerSchema>;
 
 const SignUp = () => {
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    reset,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<registerForm>({
+    resolver: zodResolver(registerSchema),
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const result = registerSchema.safeParse({
-      username,
-      password,
-      firstName,
-      lastName,
-    });
-
-    if (!result.success) {
-      const fieldErrors: { [key: string]: string } = {};
-      result.error.errors.forEach((err) => {
-        const fieldName = err.path[0];
-        if (!fieldErrors[fieldName]) {
-          fieldErrors[fieldName] = err.message;
-        }
-      });
-      setErrors(fieldErrors);
-      return;
-    }
-
-    setErrors({});
+  const onSubmit: SubmitHandler<registerForm> = async (data) => {
     try {
       setStatusMessage("Registering you...");
-      const res = await axios.post("/api/registerUser", {
-        username,
-        password,
-        firstName,
-        lastName,
-      });
-
+      const res = await axios.post("/api/registerUser", data);
       if (res.data.message) {
         setStatusMessage(res.data.message || "Registration successful!");
+        reset();
         setTimeout(() => {
-          router.push("/courses");
+          router.push("/sign-up");
         }, 1500);
       }
     } catch (error) {
@@ -63,7 +46,16 @@ const SignUp = () => {
         axios.isAxiosError(error) && error.response?.data?.error
           ? error.response.data.error
           : "Something went wrong!";
-      setStatusMessage(errorMessage);
+      if (
+        axios.isAxiosError(error) &&
+        error.response?.data?.field === "username"
+      ) {
+        setError("username", { message: errorMessage });
+      } else {
+        setError("root", { message: errorMessage });
+      }
+
+      setStatusMessage("");
     }
   };
 
@@ -102,7 +94,10 @@ const SignUp = () => {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col gap-4"
+            >
               <div className="flex gap-5">
                 <div className="flex flex-col gap-2">
                   <label htmlFor="firstName" className="text-sm">
@@ -113,13 +108,24 @@ const SignUp = () => {
                     type="text"
                     placeholder="Enter First Name"
                     className="w-37.5 px-4 py-3 rounded-md text-white bg-white/5 placeholder:text-sm text-sm"
-                    value={firstName}
-                    onChange={(e) => {
-                      setFirstName(e.target.value);
-                      setErrors({});
-                      setStatusMessage("");
-                    }}
+                    {...register("firstName", {
+                      onChange: () => {
+                        clearErrors();
+                        setStatusMessage("");
+                      },
+                    })}
                   />
+
+                  <div className="w-40 flex flex-wrap">
+                    {errors.firstName && (
+                      <p
+                        id="username-error"
+                        className="text-xs text-red-300 mt-1"
+                      >
+                        {errors.firstName.message as string}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex flex-col gap-2">
@@ -131,13 +137,24 @@ const SignUp = () => {
                     type="text"
                     placeholder="Enter Last Name"
                     className="w-37.5 px-4 py-3 rounded-md text-white bg-white/5 placeholder:text-sm text-sm"
-                    value={lastName}
-                    onChange={(e) => {
-                      setLastName(e.target.value);
-                      setErrors({});
-                      setStatusMessage("");
-                    }}
+                    {...register("lastName", {
+                      onChange: () => {
+                        clearErrors();
+                        setStatusMessage("");
+                      },
+                    })}
                   />
+
+                  <div className="w-40 flex flex-wrap">
+                    {errors.lastName && (
+                      <p
+                        id="username-error"
+                        className="text-xs text-red-300 mt-1"
+                      >
+                        {errors.lastName.message as string}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -149,29 +166,34 @@ const SignUp = () => {
                 type="text"
                 placeholder="Enter username"
                 className="w-80 px-4 py-3 rounded-md text-white bg-white/5 placeholder:text-sm text-sm"
-                value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                  setErrors({});
-                  setStatusMessage("");
-                }}
+                {...register("username", {
+                  onChange: () => {
+                    clearErrors();
+                    setStatusMessage("");
+                  },
+                })}
               />
+              {errors.username && (
+                <p id="username-error" className="text-xs text-red-300 mt-1">
+                  {errors.username.message as string}
+                </p>
+              )}
 
               <label htmlFor="password" className="text-sm">
                 Password
               </label>
-              <div className="relative w-80">
+              <div className="relative w-80 border">
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter password"
                   className="w-80 px-4 py-3 rounded-md text-white bg-white/5 placeholder:text-sm text-sm"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    setErrors({});
-                    setStatusMessage("");
-                  }}
+                  {...register("password", {
+                    onChange: () => {
+                      clearErrors();
+                      setStatusMessage("");
+                    },
+                  })}
                 />
 
                 <div
@@ -182,9 +204,20 @@ const SignUp = () => {
                 </div>
               </div>
 
+              {errors.password && (
+                <p id="username-error" className="text-xs text-red-300 mt-1">
+                  {errors.password.message as string}
+                </p>
+              )}
+              {errors.root && (
+                <p className="text-xs text-red-300 mt-2">
+                  {errors.root.message as string}
+                </p>
+              )}
               <button
                 type="submit"
                 className="bg-[#eee] text-black px-4 py-2 rounded-full mt-6"
+                disabled={isSubmitting}
               >
                 Sign Up
               </button>
@@ -196,20 +229,6 @@ const SignUp = () => {
                 </Link>
               </p>
             </form>
-
-            {/* Error Summary */}
-            {Object.keys(errors).length > 0 && (
-              <div className="mt-4 text-xs text-red-400 bg-red-400/5 p-4 rounded-md border border-red-400/20 w-full max-w-80">
-                <h3 className="font-semibold mb-2">
-                  Please fix the following:
-                </h3>
-                <ul className="list-disc list-inside space-y-1">
-                  {Object.entries(errors).map(([field, message]) => (
-                    <li key={field}>{message}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
 
             {/* Status Message */}
             {statusMessage && (

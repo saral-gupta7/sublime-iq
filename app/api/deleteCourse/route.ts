@@ -9,7 +9,7 @@ export async function DELETE(req: NextRequest) {
     if (!courseId) {
       return NextResponse.json(
         { error: "Course ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
     await prisma.course.delete({
@@ -22,7 +22,7 @@ export async function DELETE(req: NextRequest) {
     console.error("Delete error:", error);
     return NextResponse.json(
       { error: "Failed to delete course" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

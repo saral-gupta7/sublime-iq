@@ -10,7 +10,7 @@ const About = () => {
             "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(249, 115, 22, 0.25), transparent 70%), #000000",
         }}
       />
-      <div className="flex flex-col w-full max-w-3xl px-10 gap-5">
+      <div className="flex flex-col w-full max-w-3xl px-10 gap-10">
         <h1 className="text-6xl md:text-8xl z-20 text-neutral-500">About</h1>
         <p className="text-md z-40 text-neutral-300">
           Sublime IQ is your personalized microcourse generator, built to

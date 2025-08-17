@@ -1,4 +1,7 @@
 "use client";
+
+import { useForm, SubmitHandler } from "react-hook-form";
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -8,10 +11,23 @@ import { motion } from "motion/react";
 
 import { Eye, EyeOff } from "lucide-react";
 
+type loginForm = {
+  username: string;
+  password: string;
+};
+
 const SignInPage = () => {
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    register,
+    reset,
+    handleSubmit,
+    setError,
+
+    clearErrors,
+    formState: { errors, isSubmitting },
+  } = useForm<loginForm>();
+
   const [statusMessage, setStatusMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -25,41 +41,41 @@ const SignInPage = () => {
     checkSession();
   }, [router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!username.trim() || !password.trim()) {
-      setStatusMessage("Please enter both username and password.");
-      return;
-    }
-
+  const onSubmit: SubmitHandler<loginForm> = async (data) => {
     try {
       setStatusMessage("Signing you in...");
-      const res = await axios.post("/api/loginUser", { username, password });
+      const res = await axios.post("/api/loginUser", data);
 
       if (res.data.message) {
-        setUsername("");
-        setPassword("");
         setStatusMessage("Signed in! Redirecting...");
+
+        reset();
         setTimeout(() => (window.location.href = "/courses"), 700);
         return;
       }
-
-      setUsername("");
-      setPassword("");
     } catch (error) {
       const errorMessage =
         axios.isAxiosError(error) && error.response?.data?.error
           ? error.response.data.error
           : "Login failed. Please try again.";
-      setStatusMessage(errorMessage);
+      // Map backend errors to specific fields
+      if (errorMessage.includes("Username")) {
+        setError("username", { message: errorMessage });
+      } else if (errorMessage.includes("password")) {
+        setError("password", { message: errorMessage });
+      } else {
+        // fallback for generic errors
+        setError("root", { message: errorMessage });
+      }
+
+      setStatusMessage("");
     }
   };
 
   return (
     <section className="h-screen w-screen overflow-hidden text-white">
       <div className="w-full h-full grid md:grid-cols-2 grid-cols-1">
-        {/* Left Illustration */}
+        {/* Left Image */}
         <div className="relative hidden md:flex items-center justify-center">
           <Image
             src={"/images/auth-image.jpg"}
@@ -91,7 +107,10 @@ const SignInPage = () => {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col gap-5"
+            >
               <label htmlFor="username" className="text-sm">
                 Username
               </label>
@@ -100,12 +119,19 @@ const SignInPage = () => {
                 id="username"
                 placeholder="Enter username"
                 className="w-80 px-4 py-3 rounded-md bg-white/5 text-sm text-white placeholder:text-sm"
-                value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                  setStatusMessage("");
-                }}
+                {...register("username", {
+                  required: "Username can't be empty",
+                  onChange: () => {
+                    clearErrors();
+                    setStatusMessage("");
+                  },
+                })}
               />
+              {errors.username && (
+                <p id="username-error" className="text-xs text-red-300 mt-1">
+                  {errors.username.message as string}
+                </p>
+              )}
 
               <label htmlFor="password" className="text-sm">
                 Password
@@ -116,11 +142,14 @@ const SignInPage = () => {
                   id="password"
                   placeholder="Enter password"
                   className="w-full px-4 py-3 pr-12 rounded-md bg-white/5 text-sm text-white placeholder:text-sm"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    setStatusMessage("");
-                  }}
+                  {...register("password", {
+                    required: "Password can't be empty",
+
+                    onChange: () => {
+                      clearErrors();
+                      setStatusMessage("");
+                    },
+                  })}
                 />
 
                 <div
@@ -131,9 +160,16 @@ const SignInPage = () => {
                 </div>
               </div>
 
+              {errors.password && (
+                <p id="username-error" className="text-xs text-red-300 mt-1">
+                  {errors.password.message as string}
+                </p>
+              )}
+
               <button
                 type="submit"
                 className="bg-[#eee] text-black px-4 py-2 rounded-full mt-10"
+                disabled={isSubmitting}
               >
                 Sign In
               </button>
