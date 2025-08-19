@@ -1,15 +1,13 @@
 "use client";
 
-import { useForm, SubmitHandler } from "react-hook-form";
-
-import { useState, useEffect } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
+import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "motion/react";
-
-import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 type loginForm = {
   username: string;
@@ -58,13 +56,12 @@ const SignInPage = () => {
         axios.isAxiosError(error) && error.response?.data?.error
           ? error.response.data.error
           : "Login failed. Please try again.";
-      // Map backend errors to specific fields
+
       if (errorMessage.includes("Username")) {
         setError("username", { message: errorMessage });
       } else if (errorMessage.includes("password")) {
         setError("password", { message: errorMessage });
       } else {
-        // fallback for generic errors
         setError("root", { message: errorMessage });
       }
 
@@ -74,9 +71,9 @@ const SignInPage = () => {
 
   return (
     <section className="h-screen w-screen overflow-hidden text-white">
-      <div className="w-full h-full grid md:grid-cols-2 grid-cols-1">
+      <div className="grid h-full w-full grid-cols-1 md:grid-cols-2">
         {/* Left Image */}
-        <div className="relative hidden md:flex items-center justify-center">
+        <div className="relative hidden items-center justify-center md:flex">
           <Image
             src={"/images/auth-image.jpg"}
             alt="auth-image"
@@ -86,7 +83,7 @@ const SignInPage = () => {
         </div>
 
         {/* Right Form */}
-        <div className="relative flex flex-col justify-center items-center px-4">
+        <div className="relative flex flex-col items-center justify-center px-4">
           <div
             className="absolute inset-0 z-0"
             style={{
@@ -95,7 +92,7 @@ const SignInPage = () => {
           ></div>
 
           <motion.div
-            className="p-8 flex flex-col gap-10 z-10 backdrop-blur-xl"
+            className="z-10 flex flex-col gap-10 p-8 backdrop-blur-xl"
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
@@ -118,7 +115,7 @@ const SignInPage = () => {
                 type="text"
                 id="username"
                 placeholder="Enter username"
-                className="w-80 px-4 py-3 rounded-md bg-white/5 text-sm text-white placeholder:text-sm"
+                className="w-80 rounded-md bg-white/5 px-4 py-3 text-sm text-white placeholder:text-sm"
                 {...register("username", {
                   required: "Username can't be empty",
                   onChange: () => {
@@ -128,7 +125,7 @@ const SignInPage = () => {
                 })}
               />
               {errors.username && (
-                <p id="username-error" className="text-xs text-red-300 mt-1">
+                <p id="username-error" className="mt-1 text-xs text-red-300">
                   {errors.username.message as string}
                 </p>
               )}
@@ -141,7 +138,7 @@ const SignInPage = () => {
                   type={showPassword ? "text" : "password"}
                   id="password"
                   placeholder="Enter password"
-                  className="w-full px-4 py-3 pr-12 rounded-md bg-white/5 text-sm text-white placeholder:text-sm"
+                  className="w-full rounded-md bg-white/5 px-4 py-3 pr-12 text-sm text-white placeholder:text-sm"
                   {...register("password", {
                     required: "Password can't be empty",
 
@@ -153,7 +150,7 @@ const SignInPage = () => {
                 />
 
                 <div
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                  className="absolute top-1/2 right-4 -translate-y-1/2 transform cursor-pointer"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -161,20 +158,20 @@ const SignInPage = () => {
               </div>
 
               {errors.password && (
-                <p id="username-error" className="text-xs text-red-300 mt-1">
+                <p id="username-error" className="mt-1 text-xs text-red-300">
                   {errors.password.message as string}
                 </p>
               )}
 
               <button
                 type="submit"
-                className="bg-[#eee] text-black px-4 py-2 rounded-full mt-10"
+                className="mt-10 rounded-full bg-[#eee] px-4 py-2 text-black"
                 disabled={isSubmitting}
               >
                 Sign In
               </button>
 
-              <p className="text-sm text-white/70 flex gap-2">
+              <p className="flex gap-2 text-sm text-white/70">
                 <span>Don&apos;t have an account?</span>
                 <Link href="/sign-up" className="underline">
                   Sign Up
@@ -184,7 +181,7 @@ const SignInPage = () => {
 
             {statusMessage && (
               <motion.p
-                className="text-sm text-white/70 px-4 py-2"
+                className="px-4 py-2 text-sm text-white/70"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}

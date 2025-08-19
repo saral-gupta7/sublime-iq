@@ -1,14 +1,15 @@
 "use client";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useState } from "react";
+
+import { registerSchema } from "@/lib/schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
+import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "motion/react";
-import { registerSchema } from "@/lib/schema";
-import { Eye, EyeOff } from "lucide-react";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import z from "zod";
 
 type registerForm = z.infer<typeof registerSchema>;

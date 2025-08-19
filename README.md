@@ -95,16 +95,6 @@ Sublime IQ is an intelligent learning platform that harnesses the power of AI to
 4. Navigate through lessons using the sidebar
 5. Watch recommended videos and read detailed content for each lesson
 
-## 🤝 Contributing
-
-We welcome contributions! Please feel free to submit issues, feature requests, or pull requests.
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
 
 **Built with ❤️ for learners everywhere. Start your learning journey today with Sublime IQ!**
 
--
